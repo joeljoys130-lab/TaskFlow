@@ -409,7 +409,6 @@ function addTask() {
     taskInput.focus();
 
     showToast('✅ Task added!');
-    notifyDevice('TaskFlow', `New task added: "${text}"`);
     render();
 }
 
@@ -639,18 +638,42 @@ document.head.appendChild(shakeStyle);
 function checkReminders() {
     const now = new Date();
     let updated = false;
+    let notifsSent = 0; // Prevent spamming dozens of notifications at once
+
     tasks.forEach(task => {
-        if (!task.completed && task.dueDate && !task.notified1hr) {
-            const dueTime = new Date(task.dueDate);
-            const diffMs = dueTime.getTime() - now.getTime();
-            // Notify when the task is between 0 and 60 minutes away
-            if (diffMs > 0 && diffMs <= 60 * 60 * 1000) {
-                notifyDevice("⏰ Task Reminder", `Your task "${task.text}" is due in less than an hour!`);
-                task.notified1hr = true;
-                updated = true;
+        if (task.completed || !task.dueDate) return;
+
+        const dueTime = new Date(task.dueDate);
+        const diffMs = dueTime.getTime() - now.getTime();
+        const diffMins = diffMs / (1000 * 60);
+
+        // Anti-Spam: Do not notify if this task was *just* created within the last 1 minute
+        const ageMins = (now.getTime() - (task.createdAt || 0)) / (1000 * 60);
+        if (ageMins < 1) return;
+
+        // Reminder 1: "Due Soon" (Exactly 13 ~ 16 minutes away)
+        if (diffMins > 13 && diffMins <= 16 && !task.notified15m && !task.notified1hr) {
+            task.notified1hr = true; // Legacy fallback flag
+            task.notified15m = true;
+            updated = true;
+            if (notifsSent < 2) {
+                notifyDevice("⏳ Almost Due", `"${task.text}" is due in 15 minutes!`);
+                notifsSent++;
+            }
+        }
+
+        // Reminder 2: "Due Now" (Exactly when due or past due up to 2 hours)
+        if (diffMins <= 0 && diffMins > -120 && !task.notifiedDue) {
+            task.notifiedDue = true;
+            task.notified1hr = true; // Legacy fallback flag
+            updated = true;
+            if (notifsSent < 2) {
+                notifyDevice("🚨 Task Due Now!", `It's time for "${task.text}"`);
+                notifsSent++;
             }
         }
     });
+
     if (updated) saveTasks();
 }
 setInterval(checkReminders, 60000); // Check every minute
