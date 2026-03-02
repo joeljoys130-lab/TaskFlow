@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TaskFlow – Smart Todo List</title>
+    <meta name="description" content="A beautiful, secure todo list app with email login and task management." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <!-- PWA Setup -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#7c3aed" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icon.svg">
+
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="auth.css" />
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <!-- EmailJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+
+<body>
+
+    <!-- Background orbs (shared) -->
+    <div class="bg-orb orb1"></div>
+    <div class="bg-orb orb2"></div>
+    <div class="bg-orb orb3"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+       AUTH OVERLAY (shows when not logged in)
+       ═══════════════════════════════════════════════════════════ -->
+    <div class="auth-overlay hidden" id="authOverlay">
+        <div class="auth-container">
+
+            <!-- Brand -->
+            <div class="auth-brand">
+                <div class="auth-logo">
+                    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="36" height="36" rx="10" fill="url(#aLogoGrad)" />
+                        <path d="M10 18l5 5 11-11" stroke="white" stroke-width="2.5" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <defs>
+                            <linearGradient id="aLogoGrad" x1="0" y1="0" x2="36" y2="36">
+                                <stop stop-color="#7C3AED" />
+                                <stop offset="1" stop-color="#3B82F6" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="auth-brand-name">TaskFlow</span>
+            </div>
+
+            <!-- ── LOGIN SCREEN ── -->
+            <div class="auth-screen" id="screenLogin">
+                <div class="auth-card">
+                    <div class="auth-card-header">
+                        <h2>Welcome back 👋</h2>
+                        <p>Sign in to your account to continue</p>
+                    </div>
+
+                    <div class="auth-field">
+                        <label for="loginEmail">Email address</label>
+                        <div class="auth-input-wrap">
+                            <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                <polyline points="22,6 12,13 2,6" />
+                            </svg>
+                            <input type="email" id="loginEmail" class="auth-input" placeholder="you@example.com"
+                                autocomplete="email" />
+                        </div>
+                    </div>
+
+                    <div class="auth-field">
+                        <label for="loginPass">Password</label>
+                        <div class="auth-input-wrap">
+                            <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                <path d="M7 11V7a5 5 0 0110 0v4" />
+                            </svg>
+                            <input type="password" id="loginPass" class="auth-input" placeholder="Enter your password"
+                                autocomplete="current-password" />
+                            <button class="toggle-pass" id="loginTogglePass" type="button" aria-label="Show password">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                    <circle cx="12" cy="12" r="3" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="auth-row">
+                        <label class="remember-label">
+                            <input type="checkbox" id="loginRemember" />
+                            <span class="checkmark"></span>
+                            Remember me
+                        </label>
+                    </div>
+
+                    <p class="auth-err" id="loginErr"></p>
+
+                    <button class="auth-btn primary" id="loginBtn">
+                        <span>Sign In</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                            stroke-linecap="round">
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <polyline points="12 5 19 12 12 19" />
+                        </svg>
+                    </button>
+
+                    <p class="auth-switch">
+                        Don't have an account?
+                        <button class="link-btn" id="toSignup">Create one free</button>
+                    </p>
+                </div>
+            </div>
+
+            <!-- ── SIGN UP SCREEN ── -->
+            <div class="auth-screen" id="screenSignup">
+                <div class="auth-card">
+                    <div class="auth-card-header">
+                        <h2>Create account ✨</h2>
+                        <p>Join TaskFlow and stay on top of everything</p>
+                    </div>
+
+                    <div class="auth-field">
+                        <label for="signupName">Full name</label>
+                        <div class="auth-input-wrap">
+                            <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
+                            </svg>
+                            <input type="text" id="signupName" class="auth-input" placeholder="Joel Joy"
+                                autocomplete="name" />
+                        </div>
+                    </div>
+
+                    <div class="auth-field">
+                        <label for="signupEmail">Email address</label>
+                        <div class="auth-input-wrap">
+                            <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                <polyline points="22,6 12,13 2,6" />
+                            </svg>
+                            <input type="email" id="signupEmail" class="auth-input" placeholder="you@example.com"
+                                autocomplete="email" />
+                        </div>
+                    </div>
+
+                    <div class="auth-field">
+                        <label for="signupPass">Password</label>
+                        <div class="auth-input-wrap">
+                            <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                <path d="M7 11V7a5 5 0 0110 0v4" />
+                            </svg>
+                            <input type="password" id="signupPass" class="auth-input" placeholder="Min. 8 characters"
+                                autocomplete="new-password" />
+                            <button class="toggle-pass" id="signupTogglePass" type="button" aria-label="Show password">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                    <circle cx="12" cy="12" r="3" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="strength-wrap">
+                            <div class="strength-track">
+                                <div class="strength-bar" id="strengthBar"></div>
+                            </div>
+                            <span class="strength-text" id="strengthText"></span>
+                        </div>
+                    </div>
+
+                    <div class="auth-field">
+                        <label for="signupConfirm">Confirm password</label>
+                        <div class="auth-input-wrap">
+                            <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                            </svg>
+                            <input type="password" id="signupConfirm" class="auth-input" placeholder="Repeat password"
+                                autocomplete="new-password" />
+                            <button class="toggle-pass" id="signupToggleConfirm" type="button"
+                                aria-label="Show password">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                    <circle cx="12" cy="12" r="3" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <p class="auth-err" id="signupErr"></p>
+
+                    <button class="auth-btn primary" id="signupBtn">
+                        <span>Create Account</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                            stroke-linecap="round">
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <polyline points="12 5 19 12 12 19" />
+                        </svg>
+                    </button>
+
+                    <p class="auth-switch">
+                        Already have an account?
+                        <button class="link-btn" id="toLogin">Sign in</button>
+                    </p>
+                </div>
+            </div>
+
+            <!-- ── OTP VERIFICATION SCREEN ── -->
+            <div class="auth-screen" id="screenOtp">
+                <div class="auth-card">
+                    <div class="auth-card-header">
+                        <div class="otp-icon-wrap">
+                            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="24" cy="24" r="24" fill="url(#otpBg)" />
+                                <path d="M10 24l8 8 20-16" stroke="white" stroke-width="3" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                                <defs>
+                                    <linearGradient id="otpBg" x1="0" y1="0" x2="48" y2="48">
+                                        <stop stop-color="#7c3aed" />
+                                        <stop offset="1" stop-color="#3b82f6" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <h2>Verify your email</h2>
+                        <p>We sent a 6-digit code to<br /><strong id="otpEmailDisplay"></strong></p>
+                    </div>
+
+                    <!-- Dynamic send status -->
+                    <div class="otp-send-status sending" id="otpSendStatus">
+                        <span class="otp-spinner"></span> Sending code…
+                    </div>
+
+                    <!-- 6 OTP boxes -->
+                    <div class="otp-inputs" id="otpInputsWrap">
+                        <input class="otp-input" type="text" inputmode="numeric" maxlength="1"
+                            autocomplete="one-time-code" aria-label="OTP digit 1" />
+                        <input class="otp-input" type="text" inputmode="numeric" maxlength="1"
+                            aria-label="OTP digit 2" />
+                        <input class="otp-input" type="text" inputmode="numeric" maxlength="1"
+                            aria-label="OTP digit 3" />
+                        <input class="otp-input" type="text" inputmode="numeric" maxlength="1"
+                            aria-label="OTP digit 4" />
+                        <input class="otp-input" type="text" inputmode="numeric" maxlength="1"
+                            aria-label="OTP digit 5" />
+                        <input class="otp-input" type="text" inputmode="numeric" maxlength="1"
+                            aria-label="OTP digit 6" />
+                    </div>
+
+                    <p class="auth-err" id="otpErr"></p>
+
+                    <button class="auth-btn primary" id="otpVerifyBtn" disabled>
+                        <span>Verify &amp; Continue</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                            stroke-linecap="round">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                    </button>
+
+                    <div class="otp-bottom">
+                        <span>Didn't receive it?</span>
+                        <button class="link-btn" id="otpResend">Resend Code</button>
+                    </div>
+
+                    <button class="otp-back-btn" id="otpBack">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round">
+                            <line x1="19" y1="12" x2="5" y2="12" />
+                            <polyline points="12 19 5 12 12 5" />
+                        </svg>
+                        Back to sign up
+                    </button>
+                </div>
+            </div>
+
+            <!-- ── SETUP WIZARD SCREEN ── -->
+            <div class="auth-screen" id="screenSetup">
+                <div class="auth-card setup-card">
+
+                    <div class="setup-header-row">
+                        <div class="setup-badge">Step 1 of 1 &nbsp;·&nbsp; Free</div>
+                        <h2>Activate Email OTP</h2>
+                        <p>TaskFlow sends a one-time code to the user's inbox on every signup.<br />
+                            This requires a free <strong>EmailJS</strong> account — takes about 3 minutes.</p>
+                    </div>
+
+                    <!-- Collapsible guide -->
+                    <details class="setup-guide" open>
+                        <summary>📖 How to get your keys (click to collapse)</summary>
+                        <div class="setup-steps">
+                            <div class="setup-step">
+                                <span class="step-num">1</span>
+                                <span>Go to <a href="https://www.emailjs.com" target="_blank"
+                                        rel="noopener">emailjs.com</a> and create a <strong>free account</strong></span>
+                            </div>
+                            <div class="setup-step">
+                                <span class="step-num">2</span>
+                                <span>Add an <strong>Email Service</strong> (connect Gmail / Outlook) → copy the
+                                    <strong>Service ID</strong></span>
+                            </div>
+                            <div class="setup-step">
+                                <span class="step-num">3</span>
+                                <span>Create an <strong>Email Template</strong> — use these variables in the body:<br />
+                                    <code>{{otp_code}}</code> &nbsp;<code>{{to_name}}</code>
+                                    &nbsp;<code>{{to_email}}</code><br />
+                                    Then copy the <strong>Template ID</strong></span>
+                            </div>
+                            <div class="setup-step">
+                                <span class="step-num">4</span>
+                                <span>Go to <strong>Account → API Keys</strong> → copy your <strong>Public
+                                        Key</strong></span>
+                            </div>
+                        </div>
+                    </details>
+
+                    <!-- Credentials -->
+                    <div class="auth-field">
+                        <label for="setupPublicKey">Public Key</label>
+                        <div class="auth-input-wrap">
+                            <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path
+                                    d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" />
+                            </svg>
+                            <input type="text" id="setupPublicKey" class="auth-input"
+                                placeholder="e.g. user_aBcDeFgHiJk" autocomplete="off" />
+                        </div>
+                    </div>
+
+                    <div class="auth-field">
+                        <label for="setupServiceId">Service ID</label>
+                        <div class="auth-input-wrap">
+                            <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                <polyline points="22,6 12,13 2,6" />
+                            </svg>
+                            <input type="text" id="setupServiceId" class="auth-input" placeholder="e.g. service_xxxxxx"
+                                autocomplete="off" />
+                        </div>
+                    </div>
+
+                    <div class="auth-field">
+                        <label for="setupTemplateId">Template ID</label>
+                        <div class="auth-input-wrap">
+                            <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                                <polyline points="14 2 14 8 20 8" />
+                            </svg>
+                            <input type="text" id="setupTemplateId" class="auth-input"
+                                placeholder="e.g. template_xxxxxx" autocomplete="off" />
+                        </div>
+                    </div>
+
+                    <!-- Test send -->
+                    <div class="setup-test-row">
+                        <input type="email" id="setupTestEmail" class="auth-input"
+                            placeholder="Send a test email to verify…" />
+                        <button class="setup-test-btn" id="setupTestBtn">✉ Test</button>
+                    </div>
+
+                    <p class="auth-err" id="setupErr"></p>
+
+                    <button class="auth-btn primary" id="setupSaveBtn">
+                        <span>Finish Setup &amp; Continue</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                            stroke-linecap="round">
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <polyline points="12 5 19 12 12 19" />
+                        </svg>
+                    </button>
+
+                    <!-- Only shown when accessed from settings while logged in -->
+                    <p class="auth-switch" id="setupSkipRow" style="display:none">
+                        <button class="link-btn" id="setupSkipBtn">← Back without saving</button>
+                    </p>
+                </div>
+            </div>
+
+        </div><!-- /.auth-container -->
+    </div><!-- /#authOverlay -->
+
+    <!-- ═══════════════════════════════════════════════════════════
+       MAIN APP (hidden until logged in)
+       ═══════════════════════════════════════════════════════════ -->
+    <div class="app-wrapper hidden" id="mainApp">
+
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <div class="logo">
+                    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="36" height="36" rx="10" fill="url(#logoGrad)" />
+                        <path d="M10 18l5 5 11-11" stroke="white" stroke-width="2.5" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <defs>
+                            <linearGradient id="logoGrad" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#7C3AED" />
+                                <stop offset="1" stop-color="#3B82F6" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <div class="header-text">
+                    <h1>TaskFlow</h1>
+                    <p class="subtitle" id="date-display"></p>
+                </div>
+            </div>
+            <div class="header-right">
+                <!-- Logged-in user -->
+                <div class="header-user" id="headerUser" style="display:none">
+                    <div class="user-avatar" id="userAvatar"></div>
+                    <span class="user-name" id="userName"></span>
+                    <button class="settings-btn" id="settingsBtn" title="Email settings" aria-label="Email settings">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round">
+                            <circle cx="12" cy="12" r="3" />
+                            <path
+                                d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" />
+                        </svg>
+                    </button>
+                    <button class="logout-btn" id="logoutBtn" title="Sign out" aria-label="Sign out">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round">
+                            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+                            <polyline points="16 17 21 12 16 7" />
+                            <line x1="21" y1="12" x2="9" y2="12" />
+                        </svg>
+                    </button>
+                </div>
+                <button class="theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">
+                    <span class="sun-icon">☀️</span>
+                    <span class="moon-icon">🌙</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-card">
+                <span class="stat-num" id="stat-total">0</span>
+                <span class="stat-label">Total</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-num" id="stat-active">0</span>
+                <span class="stat-label">Active</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-num" id="stat-done">0</span>
+                <span class="stat-label">Done</span>
+            </div>
+            <div class="stat-card">
+                <div class="progress-ring-wrap">
+                    <svg class="progress-ring" viewBox="0 0 48 48">
+                        <circle class="ring-bg" cx="24" cy="24" r="20" />
+                        <circle class="ring-fill" id="ringFill" cx="24" cy="24" r="20" />
+                    </svg>
+                    <span class="ring-pct" id="ringPct">0%</span>
+                </div>
+                <span class="stat-label">Progress</span>
+            </div>
+        </div>
+
+        <!-- Input Section -->
+        <div class="input-section">
+            <div class="input-card">
+                <div class="input-row">
+                    <input type="text" id="taskInput" class="task-input" placeholder="What needs to be done? ✨"
+                        maxlength="120" autocomplete="off" />
+                    <button class="add-btn" id="addBtn" aria-label="Add task">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                            stroke-linecap="round">
+                            <line x1="12" y1="5" x2="12" y2="19" />
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="meta-row">
+                    <div class="meta-group">
+                        <label for="prioritySelect" class="meta-label">Priority</label>
+                        <select id="prioritySelect" class="meta-select">
+                            <option value="low">🟢 Low</option>
+                            <option value="medium" selected>🟡 Medium</option>
+                            <option value="high">🔴 High</option>
+                        </select>
+                    </div>
+                    <div class="meta-group">
+                        <label for="categorySelect" class="meta-label">Category</label>
+                        <select id="categorySelect" class="meta-select">
+                            <option value="personal">👤 Personal</option>
+                            <option value="work">💼 Work</option>
+                            <option value="health">🏃 Health</option>
+                            <option value="shopping">🛒 Shopping</option>
+                            <option value="learning">📚 Learning</option>
+                            <option value="other">📌 Other</option>
+                        </select>
+                    </div>
+                    <div class="meta-group">
+                        <label for="dueDateInput" class="meta-label">Due Date & Time</label>
+                        <input type="datetime-local" id="dueDateInput" class="meta-select" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter & Sort Bar -->
+        <div class="filter-bar">
+            <div class="filter-tabs" role="tablist">
+                <button class="filter-tab active" data-filter="all" role="tab">All</button>
+                <button class="filter-tab" data-filter="active" role="tab">Active</button>
+                <button class="filter-tab" data-filter="completed" role="tab">Done</button>
+                <button class="filter-tab" data-filter="high" role="tab">🔴 High</button>
+                <button class="filter-tab" data-filter="today" role="tab">📅 Today</button>
+            </div>
+            <div class="sort-group">
+                <select id="sortSelect" class="meta-select small" aria-label="Sort tasks">
+                    <option value="newest">Newest</option>
+                    <option value="oldest">Oldest</option>
+                    <option value="priority">Priority</option>
+                    <option value="duedate">Due Date</option>
+                    <option value="alpha">A–Z</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Search -->
+        <div class="search-wrap">
+            <div class="search-box">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <input type="text" id="searchInput" class="search-input" placeholder="Search tasks…" autocomplete="off"
+                    aria-label="Search tasks" />
+                <button class="clear-search" id="clearSearch" aria-label="Clear search">✕</button>
+            </div>
+        </div>
+
+        <!-- Task List -->
+        <main class="task-list-wrap" id="taskListWrap">
+            <ul class="task-list" id="taskList" aria-label="Task list"></ul>
+            <div class="empty-state" id="emptyState">
+                <div class="empty-icon">🎯</div>
+                <p class="empty-title">No tasks here!</p>
+                <p class="empty-sub">Add a task above to get started.</p>
+            </div>
+        </main>
+
+        <!-- Bulk Actions -->
+        <div class="bulk-actions" id="bulkActions">
+            <button class="bulk-btn" id="clearCompleted">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                </svg>
+                Clear Completed
+            </button>
+            <button class="bulk-btn danger" id="clearAll">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6" />
+                    <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+                    <path d="M10 11v6M14 11v6" />
+                    <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" />
+                </svg>
+                Clear All
+            </button>
+        </div>
+
+    </div><!-- /#mainApp -->
+
+    <!-- Edit Modal -->
+    <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-label="Edit Task">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2>Edit Task</h2>
+                <button class="modal-close" id="modalClose" aria-label="Close modal">✕</button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="editInput" class="task-input" placeholder="Task title…" maxlength="120" />
+                <div class="meta-row">
+                    <div class="meta-group">
+                        <label for="editPriority" class="meta-label">Priority</label>
+                        <select id="editPriority" class="meta-select">
+                            <option value="low">🟢 Low</option>
+                            <option value="medium">🟡 Medium</option>
+                            <option value="high">🔴 High</option>
+                        </select>
+                    </div>
+                    <div class="meta-group">
+                        <label for="editCategory" class="meta-label">Category</label>
+                        <select id="editCategory" class="meta-select">
+                            <option value="personal">👤 Personal</option>
+                            <option value="work">💼 Work</option>
+                            <option value="health">🏃 Health</option>
+                            <option value="shopping">🛒 Shopping</option>
+                            <option value="learning">📚 Learning</option>
+                            <option value="other">📌 Other</option>
+                        </select>
+                    </div>
+                    <div class="meta-group">
+                        <label for="editDueDate" class="meta-label">Due Date & Time</label>
+                        <input type="datetime-local" id="editDueDate" class="meta-select" />
+                    </div>
+                </div>
+                <textarea id="editNotes" class="edit-notes" placeholder="Add a note… (optional)" rows="3"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-cancel" id="modalCancel">Cancel</button>
+                <button class="modal-save" id="modalSave">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Dialog -->
+    <div class="modal-overlay" id="confirmOverlay" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle">
+        <div class="modal-card confirm-card">
+            <div class="confirm-icon" id="confirmIcon">⚠️</div>
+            <h2 class="confirm-title" id="confirmTitle">Are you sure?</h2>
+            <p class="confirm-msg" id="confirmMsg">This action cannot be undone.</p>
+            <div class="modal-footer">
+                <button class="modal-cancel" id="confirmCancel">Cancel</button>
+                <button class="modal-save danger-btn" id="confirmOk">Delete All</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+    <script src="auth.js"></script>
+    <script src="app.js"></script>
+
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker registered successfully! Scope:', reg.scope))
+                    .catch(err => console.log('Service Worker registration failed: ', err));
+            });
+        }
+    </script>
+    <!-- Note: EmailJS SDK is loaded in <head> above -->
+</body>
+
+</html>
