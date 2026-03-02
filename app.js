@@ -579,6 +579,36 @@ editInput.addEventListener('keydown', e => { if (e.key === 'Enter') saveEdit(); 
 bulkClearCompleted.addEventListener('click', clearCompleted);
 bulkClearAll.addEventListener('click', clearAll);
 
+// ── Quick Picks ────────────────────────────────────────────
+function setDatePreset(inputEl, preset) {
+    const d = new Date();
+    d.setSeconds(0);
+    d.setMilliseconds(0);
+
+    if (preset === 'clear') { inputEl.value = ''; return; }
+
+    if (preset === '1h') d.setHours(d.getHours() + 1);
+    else if (preset === 'tonight') d.setHours(20, 0);
+    else if (preset === 'tmrw') d.setDate(d.getDate() + 1);
+    else if (preset === 'wknd') {
+        const daysToSat = 6 - d.getDay();
+        d.setDate(d.getDate() + (daysToSat <= 0 ? 6 : daysToSat));
+        d.setHours(10, 0);
+    }
+
+    const tzOffset = d.getTimezoneOffset() * 60000;
+    const localISO = new Date(d.getTime() - tzOffset).toISOString().slice(0, 16);
+    inputEl.value = localISO;
+}
+
+document.querySelectorAll('#addQuickPicks .qp-btn').forEach(btn => {
+    btn.addEventListener('click', () => setDatePreset(dueDateInput, btn.dataset.preset));
+});
+
+document.querySelectorAll('#editQuickPicks .qp-btn').forEach(btn => {
+    btn.addEventListener('click', () => setDatePreset(editDueDate, btn.dataset.preset));
+});
+
 // ── Shake animation ────────────────────────────────────────
 const shakeStyle = document.createElement('style');
 shakeStyle.textContent = `

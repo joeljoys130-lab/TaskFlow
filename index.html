@@ -504,9 +504,19 @@
                             <option value="other">📌 Other</option>
                         </select>
                     </div>
-                    <div class="meta-group">
-                        <label for="dueDateInput" class="meta-label">Due Date & Time</label>
-                        <input type="datetime-local" id="dueDateInput" class="meta-select" />
+                    <div class="meta-group due-group">
+                        <label for="dueDateInput" class="meta-label">Date & Time</label>
+                        <div class="due-wrap">
+                            <span class="due-icon">⏰</span>
+                            <input type="datetime-local" id="dueDateInput" class="meta-select due-advanced" />
+                        </div>
+                        <div class="quick-picks" id="addQuickPicks">
+                            <button type="button" class="qp-btn" data-preset="1h">+1h</button>
+                            <button type="button" class="qp-btn" data-preset="tonight">Tonight</button>
+                            <button type="button" class="qp-btn" data-preset="tmrw">Tmrw</button>
+                            <button type="button" class="qp-btn" data-preset="wknd">Wknd</button>
+                            <button type="button" class="qp-btn" data-preset="clear">✖</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -607,9 +617,19 @@
                             <option value="other">📌 Other</option>
                         </select>
                     </div>
-                    <div class="meta-group">
-                        <label for="editDueDate" class="meta-label">Due Date & Time</label>
-                        <input type="datetime-local" id="editDueDate" class="meta-select" />
+                    <div class="meta-group due-group">
+                        <label for="editDueDate" class="meta-label">Date & Time</label>
+                        <div class="due-wrap">
+                            <span class="due-icon">⏰</span>
+                            <input type="datetime-local" id="editDueDate" class="meta-select due-advanced" />
+                        </div>
+                        <div class="quick-picks" id="editQuickPicks">
+                            <button type="button" class="qp-btn" data-preset="1h">+1h</button>
+                            <button type="button" class="qp-btn" data-preset="tonight">Tonight</button>
+                            <button type="button" class="qp-btn" data-preset="tmrw">Tmrw</button>
+                            <button type="button" class="qp-btn" data-preset="wknd">Wknd</button>
+                            <button type="button" class="qp-btn" data-preset="clear">✖</button>
+                        </div>
                     </div>
                 </div>
                 <textarea id="editNotes" class="edit-notes" placeholder="Add a note… (optional)" rows="3"></textarea>
