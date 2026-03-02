@@ -116,56 +116,72 @@ function saveTasks() {
 }
 
 async function syncTasksToCloud() {
+    console.log('[SYNC] syncTasksToCloud started');
     // Only attempt if auth.js has loaded Firebase and a session exists
-    if (!window.firebase || !window.getSession) return;
+    if (!window.firebase || !window.getSession) return console.log('[SYNC] Missing firebase or getSession');
     const session = getSession();
-    if (!session || !session.id) return;
+    if (!session || !session.id) return console.log('[SYNC] Missing session or session.id');
 
     // Ensure Firebase Auth is fully initialized
     await new Promise(resolve => {
         const unsubscribe = firebase.auth().onAuthStateChanged(user => {
+            console.log('[SYNC] ToCloud onAuthStateChanged fired, user =', user?.uid);
             unsubscribe();
             resolve(user);
         });
     });
 
-    if (!firebase.auth().currentUser) return;
+    if (!firebase.auth().currentUser) {
+        return console.log('[SYNC] No firebase currentUser, aborting save');
+    }
 
     try {
+        console.log('[SYNC] Executing firestore save for doc', session.id, tasks);
         await firebase.firestore().collection('user_tasks').doc(session.id).set({
             tasks: tasks,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         });
+        console.log('[SYNC] Save successful!');
     } catch (err) {
-        console.log('Firebase save error:', err);
+        console.error('[SYNC] Firebase save error:', err);
+        showAuthToast('⚠️ Error saving to cloud');
     }
 }
 
 async function syncTasksFromCloud() {
-    if (!window.firebase || !window.getSession) return;
+    console.log('[SYNC] syncTasksFromCloud started');
+    if (!window.firebase || !window.getSession) return console.log('[SYNC] Missing firebase or getSession');
     const session = getSession();
-    if (!session || !session.id) return;
+    if (!session || !session.id) return console.log('[SYNC] Missing session or session.id');
 
     // Ensure Firebase Auth is fully initialized
     await new Promise(resolve => {
         const unsubscribe = firebase.auth().onAuthStateChanged(user => {
+            console.log('[SYNC] FromCloud onAuthStateChanged fired, user =', user?.uid);
             unsubscribe();
             resolve(user);
         });
     });
 
-    if (!firebase.auth().currentUser) return;
+    if (!firebase.auth().currentUser) {
+        return console.log('[SYNC] No firebase currentUser, aborting load');
+    }
 
     try {
+        console.log('[SYNC] Executing firestore get for doc', session.id);
         const doc = await firebase.firestore().collection('user_tasks').doc(session.id).get();
         if (doc.exists && doc.data().tasks) {
+            console.log('[SYNC] Retrieved tasks from cloud', doc.data().tasks);
             tasks = doc.data().tasks;
             try { localStorage.setItem('taskflow_tasks', JSON.stringify(tasks)); } catch (_) { }
             render();
-            showToast('☁️ Tasks synced from cloud!');
+            showAuthToast('☁️ Tasks synced from cloud!');
+        } else {
+            console.log('[SYNC] No tasks found in cloud doc.');
         }
     } catch (err) {
-        console.log('Firebase load error:', err);
+        console.error('[SYNC] Firebase load error:', err);
+        showAuthToast('⚠️ Error loading from cloud');
     }
 }
 
