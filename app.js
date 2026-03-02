@@ -115,14 +115,24 @@ function saveTasks() {
     syncTasksToCloud();
 }
 
-function syncTasksToCloud() {
+async function syncTasksToCloud() {
     // Only attempt if auth.js has loaded Firebase and a session exists
     if (!window.firebase || !window.getSession) return;
     const session = getSession();
     if (!session || !session.userId) return;
 
+    // Ensure Firebase Auth is fully initialized
+    await new Promise(resolve => {
+        const unsubscribe = firebase.auth().onAuthStateChanged(user => {
+            unsubscribe();
+            resolve(user);
+        });
+    });
+
+    if (!firebase.auth().currentUser) return;
+
     try {
-        firebase.firestore().collection('user_tasks').doc(session.userId).set({
+        await firebase.firestore().collection('user_tasks').doc(session.userId).set({
             tasks: tasks,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         });
@@ -135,6 +145,16 @@ async function syncTasksFromCloud() {
     if (!window.firebase || !window.getSession) return;
     const session = getSession();
     if (!session || !session.userId) return;
+
+    // Ensure Firebase Auth is fully initialized
+    await new Promise(resolve => {
+        const unsubscribe = firebase.auth().onAuthStateChanged(user => {
+            unsubscribe();
+            resolve(user);
+        });
+    });
+
+    if (!firebase.auth().currentUser) return;
 
     try {
         const doc = await firebase.firestore().collection('user_tasks').doc(session.userId).get();
