@@ -25,6 +25,10 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <!-- EmailJS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <!-- Flatpickr (Custom Date/Time UI) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 
 <body>
@@ -508,7 +512,8 @@
                         <label for="dueDateInput" class="meta-label">Date & Time</label>
                         <div class="due-wrap">
                             <span class="due-icon">⏰</span>
-                            <input type="datetime-local" id="dueDateInput" class="meta-select due-advanced" />
+                            <input type="text" id="dueDateInput" class="meta-select due-advanced"
+                                placeholder="Select time..." />
                         </div>
                         <div class="quick-picks" id="addQuickPicks">
                             <button type="button" class="qp-btn" data-preset="1h">+1h</button>
@@ -621,7 +626,8 @@
                         <label for="editDueDate" class="meta-label">Date & Time</label>
                         <div class="due-wrap">
                             <span class="due-icon">⏰</span>
-                            <input type="datetime-local" id="editDueDate" class="meta-select due-advanced" />
+                            <input type="text" id="editDueDate" class="meta-select due-advanced"
+                                placeholder="Select time..." />
                         </div>
                         <div class="quick-picks" id="editQuickPicks">
                             <button type="button" class="qp-btn" data-preset="1h">+1h</button>
