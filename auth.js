@@ -467,6 +467,7 @@ async function doLogin() {
 // ══════════════════════════════════════════════════════════════
 logoutBtn.addEventListener('click', () => {
     clearSession();
+    if (typeof clearLocalTasks === 'function') clearLocalTasks();
     authOverlay.classList.remove('hidden');
     mainApp.classList.add('hidden');
     showScreen(screenLogin);
@@ -609,6 +610,11 @@ function showMainApp(user) {
     userAvatar.textContent = user.avatar || '?';
     userAvatar.style.background = user.color || '#7c3aed';
     userName.textContent = user.name.split(' ')[0];
+
+    // Sync tasks on login
+    if (typeof syncTasksFromCloud === 'function') {
+        syncTasksFromCloud();
+    }
 }
 
 // ══════════════════════════════════════════════════════════════

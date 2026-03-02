@@ -112,6 +112,47 @@ function formatFullDate() {
 // ── Persistence ────────────────────────────────────────────
 function saveTasks() {
     try { localStorage.setItem('taskflow_tasks', JSON.stringify(tasks)); } catch (_) { }
+    syncTasksToCloud();
+}
+
+function syncTasksToCloud() {
+    // Only attempt if auth.js has loaded Firebase and a session exists
+    if (!window.firebase || !window.getSession) return;
+    const session = getSession();
+    if (!session || !session.userId) return;
+
+    try {
+        firebase.firestore().collection('user_tasks').doc(session.userId).set({
+            tasks: tasks,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+    } catch (err) {
+        console.log('Firebase save error:', err);
+    }
+}
+
+async function syncTasksFromCloud() {
+    if (!window.firebase || !window.getSession) return;
+    const session = getSession();
+    if (!session || !session.userId) return;
+
+    try {
+        const doc = await firebase.firestore().collection('user_tasks').doc(session.userId).get();
+        if (doc.exists && doc.data().tasks) {
+            tasks = doc.data().tasks;
+            try { localStorage.setItem('taskflow_tasks', JSON.stringify(tasks)); } catch (_) { }
+            render();
+            showToast('☁️ Tasks synced from cloud!');
+        }
+    } catch (err) {
+        console.log('Firebase load error:', err);
+    }
+}
+
+function clearLocalTasks() {
+    tasks = [];
+    try { localStorage.removeItem('taskflow_tasks'); } catch (_) { }
+    render();
 }
 
 function loadTasks() {
