@@ -119,7 +119,7 @@ async function syncTasksToCloud() {
     // Only attempt if auth.js has loaded Firebase and a session exists
     if (!window.firebase || !window.getSession) return;
     const session = getSession();
-    if (!session || !session.userId) return;
+    if (!session || !session.id) return;
 
     // Ensure Firebase Auth is fully initialized
     await new Promise(resolve => {
@@ -132,7 +132,7 @@ async function syncTasksToCloud() {
     if (!firebase.auth().currentUser) return;
 
     try {
-        await firebase.firestore().collection('user_tasks').doc(session.userId).set({
+        await firebase.firestore().collection('user_tasks').doc(session.id).set({
             tasks: tasks,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         });
@@ -144,7 +144,7 @@ async function syncTasksToCloud() {
 async function syncTasksFromCloud() {
     if (!window.firebase || !window.getSession) return;
     const session = getSession();
-    if (!session || !session.userId) return;
+    if (!session || !session.id) return;
 
     // Ensure Firebase Auth is fully initialized
     await new Promise(resolve => {
@@ -157,7 +157,7 @@ async function syncTasksFromCloud() {
     if (!firebase.auth().currentUser) return;
 
     try {
-        const doc = await firebase.firestore().collection('user_tasks').doc(session.userId).get();
+        const doc = await firebase.firestore().collection('user_tasks').doc(session.id).get();
         if (doc.exists && doc.data().tasks) {
             tasks = doc.data().tasks;
             try { localStorage.setItem('taskflow_tasks', JSON.stringify(tasks)); } catch (_) { }
