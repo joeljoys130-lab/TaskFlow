@@ -118,7 +118,7 @@ function saveTasks() {
 async function syncTasksToCloud() {
     console.log('[SYNC] syncTasksToCloud started');
     // Only attempt if auth.js has loaded Firebase and a session exists
-    if (!window.firebase || !window.getSession) return console.log('[SYNC] Missing firebase or getSession');
+    if (typeof firebase === 'undefined' || typeof getSession === 'undefined') return console.log('[SYNC] Missing firebase or getSession');
     const session = getSession();
     if (!session || !session.id) return console.log('[SYNC] Missing session or session.id');
 
@@ -150,7 +150,7 @@ async function syncTasksToCloud() {
 
 async function syncTasksFromCloud() {
     console.log('[SYNC] syncTasksFromCloud started');
-    if (!window.firebase || !window.getSession) return console.log('[SYNC] Missing firebase or getSession');
+    if (typeof firebase === 'undefined' || typeof getSession === 'undefined') return console.log('[SYNC] Missing firebase or getSession');
     const session = getSession();
     if (!session || !session.id) return console.log('[SYNC] Missing session or session.id');
 
