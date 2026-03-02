@@ -174,18 +174,26 @@ body {
     margin-top: 2px;
 }
 
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .theme-toggle {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 50px;
-    padding: 8px 14px;
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
     font-size: 1.1rem;
     backdrop-filter: blur(10px);
     transition: var(--transition);
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    color: var(--text-2);
 }
 
 .theme-toggle:hover {
