@@ -437,6 +437,8 @@ async function doLogin() {
 
         // Find existing local profile or create simple one if it somehow doesn't exist locally
         let user = getUsers().find(u => u.email === email);
+        const users = getUsers();
+
         if (!user) {
             user = {
                 id: userCredential.user.uid,
@@ -445,10 +447,16 @@ async function doLogin() {
                 avatar: avatarInitials(email.split('@')[0]),
                 color: avatarColor(email)
             };
-            const users = getUsers();
             users.push(user);
-            saveUsers(users);
+        } else {
+            // Forcefully update local cache to the correct Firebase ID 
+            // incase this user was created offline or prior to the Firebase update
+            user.id = userCredential.user.uid;
+            const idx = users.findIndex(u => u.email === email);
+            users[idx] = user;
         }
+
+        saveUsers(users);
 
         setSession(user, loginRemember.checked);
         showMainApp(user);
@@ -641,7 +649,7 @@ function showErr(el, msg) {
 // ══════════════════════════════════════════════════════════════
 //  BOOT  — always open at Login
 // ══════════════════════════════════════════════════════════════
-(function boot() {
+window.addEventListener('DOMContentLoaded', () => {
     // Automatically wipe buggy test accounts exactly once
     if (!localStorage.getItem('taskflow_accounts_wiped_v2')) {
         localStorage.removeItem(USERS_KEY);
@@ -657,5 +665,4 @@ function showErr(el, msg) {
         mainApp.classList.add('hidden');
         showScreen(screenLogin);
     }
-})();
-
+});
