@@ -1270,16 +1270,42 @@ input[type="datetime-local"].meta-select {
 /* ---------- Responsive ---------- */
 @media (max-width: 600px) {
     .app-wrapper {
-        padding: 16px 12px 80px;
+        padding: 12px 10px calc(80px + env(safe-area-inset-bottom));
     }
 
     .stats-bar {
         grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    /* Wrap filter tabs into a horizontally scrollable area */
+    .filter-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 4px;
+        gap: 6px;
+    }
+
+    .filter-tabs::-webkit-scrollbar {
+        height: 0px;
+    }
+
+    /* Quick picks scroll horizontally on small phones */
+    .quick-picks {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 2px;
+    }
+
+    .quick-picks::-webkit-scrollbar {
+        height: 0px;
     }
 
     .filter-tab {
         font-size: .74rem;
-        padding: 5px 10px;
+        padding: 6px 12px;
     }
 
     .meta-row {
@@ -1290,8 +1316,23 @@ input[type="datetime-local"].meta-select {
         min-width: calc(50% - 4px);
     }
 
+    .due-group {
+        min-width: 100%;
+    }
+
     .input-card {
-        padding: 14px;
+        padding: 12px;
+    }
+
+    /* Make add button slightly taller for thumbs */
+    .add-btn {
+        width: 48px;
+        height: 48px;
+    }
+
+    input.task-input {
+        padding: 12px 14px;
+        font-size: 0.95rem;
     }
 
     .modal-body {
