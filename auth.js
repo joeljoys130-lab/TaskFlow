@@ -48,7 +48,7 @@ const isEJConfigured = () => { const c = getEJConfig(); return !!(c && c.publicK
 
 function setSession(user, remember) {
     localStorage.setItem(SESSION_KEY, JSON.stringify({
-        userId: user.id, name: user.name, email: user.email, avatar: user.avatar, color: user.color, ts: Date.now()
+        id: user.id, name: user.name, email: user.email, avatar: user.avatar, color: user.color, ts: Date.now()
     }));
     if (remember) localStorage.setItem('taskflow_remember', '1');
 }
