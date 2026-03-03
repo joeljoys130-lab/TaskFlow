@@ -1718,16 +1718,17 @@ body.zen-mode .zen-title {
   .exit-zen-btn {
     top: auto;
     bottom: max(30px, env(safe-area-inset-bottom));
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: max-content;
     padding: 12px 24px;
     font-size: 1rem;
     white-space: nowrap;
   }
 
   .exit-zen-btn:hover {
-    transform: translateX(-50%) translateY(-2px);
+    transform: translateY(-2px);
   }
 
   .zen-title {
