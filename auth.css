@@ -19,32 +19,24 @@
   overflow-y: auto;
   /* Rich dark gradient matches the main app feel */
   background:
-    radial-gradient(
-      ellipse 80% 60% at 20% 10%,
-      rgba(124, 58, 237, 0.35) 0%,
-      transparent 60%
-    ),
-    radial-gradient(
-      ellipse 60% 50% at 80% 90%,
-      rgba(59, 130, 246, 0.28) 0%,
-      transparent 60%
-    ),
-    #0d0d1a;
+    radial-gradient(ellipse 80% 60% at 20% 10%,
+      rgba(148, 97, 253, 0.25) 0%,
+      transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 90%,
+      rgba(77, 145, 255, 0.2) 0%,
+      transparent 60%),
+    #000000;
   animation: authFadeIn 0.4s ease;
 }
 
 [data-theme="light"] .auth-overlay {
   background:
-    radial-gradient(
-      ellipse 80% 60% at 20% 10%,
+    radial-gradient(ellipse 80% 60% at 20% 10%,
       rgba(124, 58, 237, 0.18) 0%,
-      transparent 60%
-    ),
-    radial-gradient(
-      ellipse 60% 50% at 80% 90%,
+      transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 90%,
       rgba(59, 130, 246, 0.14) 0%,
-      transparent 60%
-    ),
+      transparent 60%),
     #eef2ff;
 }
 
@@ -416,7 +408,7 @@
   cursor: pointer;
   text-decoration: underline;
   text-decoration-style: dotted;
-  underline-offset: 3px;
+  text-underline-offset: 3px;
   transition: color 0.2s;
 }
 
@@ -698,11 +690,9 @@
 
 .setup-badge {
   display: inline-block;
-  background: linear-gradient(
-    135deg,
-    rgba(124, 58, 237, 0.22),
-    rgba(59, 130, 246, 0.18)
-  );
+  background: linear-gradient(135deg,
+      rgba(124, 58, 237, 0.22),
+      rgba(59, 130, 246, 0.18));
   border: 1px solid rgba(124, 58, 237, 0.3);
   border-radius: 99px;
   font-size: 0.7rem;
@@ -945,6 +935,7 @@
 
 /* ── Shake animation (reuse) ── */
 @keyframes shake {
+
   0%,
   100% {
     transform: translateX(0);

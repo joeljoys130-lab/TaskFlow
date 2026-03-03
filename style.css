@@ -4,27 +4,38 @@
 
 /* ---------- CSS Custom Properties ---------- */
 :root {
-  --bg-1: #0b0f19;
-  --bg-2: #111827;
-  --surface: rgba(255, 255, 255, 0.03);
-  --surface-hover: rgba(255, 255, 255, 0.06);
-  --border: rgba(255, 255, 255, 0.05);
-  --primary: #8b5cf6;
-  --primary-light: #a78bfa;
-  --secondary: #3b82f6;
-  --accent: #06b6d4;
+  /* True Dark Mode Colors */
+  --bg-1: #000000;
+  --bg-2: #0a0a0a;
+  --surface: rgba(20, 20, 20, 0.7);
+  --surface-hover: rgba(30, 30, 30, 0.9);
+  --border: rgba(255, 255, 255, 0.08);
+
+  /* Brand / Accents */
+  --primary: #9461fd;
+  --primary-light: #b38dfd;
+  --secondary: #4d91ff;
+  --accent: #11cbe8;
+
+  /* State Colors */
   --success: #10b981;
   --warning: #f59e0b;
   --danger: #ef4444;
-  --text-1: #e2e8f0;
-  --text-2: #94a3b8;
-  --text-3: #64748b;
+
+  /* Text Colors (High Contrast) */
+  --text-1: #ffffff;
+  --text-2: #a3a3a3;
+  --text-3: #525252;
+
+  /* Gradients & Shadows */
   --grad: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
   --grad-soft: linear-gradient(135deg,
-      rgba(124, 58, 237, 0.3) 0%,
-      rgba(59, 130, 246, 0.3) 100%);
-  --shadow-lg: 0 25px 50px rgba(0, 0, 0, 0.5);
-  --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.3);
+      rgba(148, 97, 253, 0.25) 0%,
+      rgba(77, 145, 255, 0.25) 100%);
+  --shadow-lg: 0 30px 60px rgba(0, 0, 0, 0.8);
+  --shadow-sm: 0 8px 25px rgba(0, 0, 0, 0.5);
+
+  /* UI Tokens */
   --radius: 18px;
   --radius-sm: 10px;
   --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
