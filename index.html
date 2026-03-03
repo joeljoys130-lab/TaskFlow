@@ -428,6 +428,7 @@
             </svg>
           </button>
         </div>
+        <button class="theme-toggle" id="quickNoteBtn" title="Quick Notes" aria-label="Quick Notes">📓</button>
         <button class="theme-toggle" id="zenModeBtn" title="Zen Mode" aria-label="Zen Mode">🧘</button>
         <button class="theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">
           <span class="sun-icon">☀️</span>
@@ -729,6 +730,42 @@
         <button class="modal-save danger-btn" id="confirmOk">
           Delete All
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Notes Modal -->
+  <div class="modal-overlay" id="quickNoteOverlay">
+    <div class="modal-card quick-note-card">
+      <div class="modal-header">
+        <h2>Quick Notes 📓</h2>
+        <button class="modal-close" id="quickNoteClose" aria-label="Close notes">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="quick-note-input-wrap">
+          <textarea id="quickNoteInput" class="task-input" placeholder="Jot down a quick thought... ✨"
+            rows="3"></textarea>
+          <div class="input-actions" style="position: absolute; bottom: 8px; right: 8px;">
+            <button class="voice-btn" id="quickNoteVoiceBtn" aria-label="Use voice input" title="Dictate note">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round" width="16" height="16">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <line x1="12" y1="19" x2="12" y2="23"></line>
+                <line x1="8" y1="23" x2="16" y2="23"></line>
+              </svg>
+            </button>
+            <button class="add-btn" id="quickNoteSaveBtn" aria-label="Save note"
+              style="padding: 6px 12px; font-size: 0.8rem; border-radius: 8px;">Save</button>
+          </div>
+        </div>
+        <div class="quick-note-list" id="quickNoteList">
+          <!-- Notes will get rendered here -->
+          <div class="empty-state visible" id="quickNoteEmpty" style="margin-top:20px; padding:10px;">
+            <div class="empty-icon" style="font-size:2rem; margin-bottom:5px;">✍️</div>
+            <p class="empty-sub">Your notes will appear here.</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>

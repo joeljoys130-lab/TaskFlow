@@ -1855,3 +1855,70 @@ body.zen-mode .add-task-trigger-wrap,
 body.zen-mode .modal-overlay {
   display: none !important;
 }
+
+/* ---------- Quick Notes ---------- */
+.quick-note-card {
+  max-width: 500px;
+  width: 90%;
+}
+
+.quick-note-input-wrap {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.quick-note-input-wrap textarea {
+  width: 100%;
+  resize: none;
+  padding-bottom: 45px;
+  /* space for actions */
+}
+
+.quick-note-list {
+  max-height: 400px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quick-note-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+}
+
+.quick-note-item p {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.quick-note-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  color: var(--text-3);
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+  margin-top: 4px;
+}
+
+.quick-note-del {
+  background: none;
+  border: none;
+  color: var(--text-3);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.quick-note-del:hover {
+  color: var(--danger);
+}

@@ -11,6 +11,7 @@ let currentSort = "newest";
 let searchQuery = "";
 let editingId = null;
 let isZenMode = false;
+let quickNotes = [];
 
 // ── DOM Refs ───────────────────────────────────────────────
 const taskInput = document.getElementById("taskInput");
@@ -67,6 +68,15 @@ const statActive = document.getElementById("stat-active");
 const statDone = document.getElementById("stat-done");
 const ringFill = document.getElementById("ringFill");
 const ringPct = document.getElementById("ringPct");
+// Quick Notes
+const quickNoteBtn = document.getElementById("quickNoteBtn");
+const quickNoteOverlay = document.getElementById("quickNoteOverlay");
+const quickNoteClose = document.getElementById("quickNoteClose");
+const quickNoteInput = document.getElementById("quickNoteInput");
+const quickNoteSaveBtn = document.getElementById("quickNoteSaveBtn");
+const quickNoteVoiceBtn = document.getElementById("quickNoteVoiceBtn");
+const quickNoteList = document.getElementById("quickNoteList");
+const quickNoteEmpty = document.getElementById("quickNoteEmpty");
 
 // ── Utilities ──────────────────────────────────────────────
 function uid() {
@@ -1065,6 +1075,112 @@ if ("serviceWorker" in navigator) {
   });
 }
 
+// ── Quick Notes ────────────────────────────────────────────
+function initQuickNotes() {
+  loadQuickNotes();
+
+  if (quickNoteBtn) quickNoteBtn.addEventListener("click", () => quickNoteOverlay.classList.add("active"));
+  if (quickNoteClose) quickNoteClose.addEventListener("click", () => quickNoteOverlay.classList.remove("active"));
+  if (quickNoteOverlay) quickNoteOverlay.addEventListener("click", (e) => { if (e.target === quickNoteOverlay) quickNoteOverlay.classList.remove("active"); });
+
+  if (quickNoteSaveBtn) {
+    quickNoteSaveBtn.addEventListener("click", () => {
+      const text = quickNoteInput.value.trim();
+      if (!text) return;
+      quickNotes.push({ id: uid(), text, createdAt: new Date().toISOString() });
+      saveQuickNotes();
+      renderQuickNotes();
+      quickNoteInput.value = "";
+    });
+  }
+
+  // Quick Note Voice
+  let qnRecognition = null;
+  if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    qnRecognition = new SpeechRec();
+    qnRecognition.continuous = false;
+    qnRecognition.interimResults = false;
+
+    qnRecognition.onstart = function () {
+      quickNoteVoiceBtn.classList.add("listening");
+      quickNoteVoiceBtn.style.color = "var(--danger)";
+      quickNoteInput.placeholder = "Listening...";
+    };
+
+    qnRecognition.onresult = function (event) {
+      const transcript = event.results[0][0].transcript;
+      quickNoteInput.value = quickNoteInput.value + (quickNoteInput.value ? " " : "") + transcript;
+    };
+
+    qnRecognition.onend = function () {
+      quickNoteVoiceBtn.classList.remove("listening");
+      quickNoteVoiceBtn.style.color = "";
+      quickNoteInput.placeholder = "Jot down a quick thought... ✨";
+    };
+
+    quickNoteVoiceBtn.addEventListener("click", () => {
+      if (quickNoteVoiceBtn.classList.contains("listening")) {
+        qnRecognition.stop();
+      } else {
+        qnRecognition.start();
+      }
+    });
+  } else {
+    if (quickNoteVoiceBtn) quickNoteVoiceBtn.style.display = "none";
+  }
+}
+
+function saveQuickNotes() {
+  try {
+    localStorage.setItem("taskflow_quicknotes", JSON.stringify(quickNotes));
+  } catch (e) { }
+}
+
+function loadQuickNotes() {
+  try {
+    const saved = localStorage.getItem("taskflow_quicknotes");
+    if (saved) quickNotes = JSON.parse(saved);
+  } catch (e) { quickNotes = []; }
+  renderQuickNotes();
+}
+
+function renderQuickNotes() {
+  if (!quickNoteList) return;
+  // Clear list except empty state
+  Array.from(quickNoteList.children).forEach(child => {
+    if (child.id !== "quickNoteEmpty") child.remove();
+  });
+
+  if (quickNotes.length === 0) {
+    if (quickNoteEmpty) quickNoteEmpty.style.display = "block";
+  } else {
+    if (quickNoteEmpty) quickNoteEmpty.style.display = "none";
+    // Sort newest first
+    const sorted = [...quickNotes].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    sorted.forEach(note => {
+      const el = document.createElement("div");
+      el.className = "quick-note-item";
+      const dt = new Date(note.createdAt);
+      const fmtDate = dt.toLocaleDateString() + " " + dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      el.innerHTML = `
+        <p>${escapeHtml(note.text)}</p>
+        <div class="quick-note-meta">
+          <span>${fmtDate}</span>
+          <button class="quick-note-del" onclick="deleteQuickNote('${note.id}')">Delete</button>
+        </div>
+      `;
+      quickNoteList.appendChild(el);
+    });
+  }
+}
+
+window.deleteQuickNote = function (id) {
+  quickNotes = quickNotes.filter(n => n.id !== id);
+  saveQuickNotes();
+  renderQuickNotes();
+};
+
 // ── Init ───────────────────────────────────────────────────
 function init() {
   loadTasks();
@@ -1086,10 +1202,9 @@ function init() {
   injectSvgGradients();
   initDatePickers();
   dateDisplay.textContent = formatFullDate();
-  // Default due date = today
-  // dueDateInput.value = today(); // optional
+
+  initQuickNotes();
   render();
-  // No demo tasks - starting fresh per user request
 }
 
 init();
