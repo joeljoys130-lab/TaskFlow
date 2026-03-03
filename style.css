@@ -1751,30 +1751,35 @@ body.zen-mode .zen-title {
 
 /* ---------- Actions Wrap & modals ---------- */
 .add-task-trigger-wrap {
-  display: flex;
-  justify-content: space-between;
-  align-items: stretch;
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
   gap: 12px;
-  margin-bottom: 24px;
+  align-items: stretch;
+  width: calc(100% + 40px);
+  /* Expand to full edges on mobile */
+  margin: 0 -20px 24px -20px !important;
 }
 
 .fab-add-btn {
-  flex: 3;
-  /* 75% */
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
   gap: 10px;
   background: var(--grad);
   color: white;
   border: none;
-  border-radius: 50px;
-  padding: 14px 20px;
-  font-size: 1.15rem;
-  font-weight: 700;
+  border-radius: 0;
+  /* flat edges on sides since we're pushing bounds */
+  border-top-right-radius: 50px;
+  border-bottom-right-radius: 50px;
+  padding: 16px 20px;
+  font-size: 1.25rem;
+  font-weight: 800;
   cursor: pointer;
   box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
   transition: transform 0.2s, box-shadow 0.2s;
+  white-space: nowrap;
 }
 
 .fab-add-btn:hover {
@@ -1783,8 +1788,7 @@ body.zen-mode .zen-title {
 }
 
 .fab-note-btn {
-  flex: 1;
-  /* 25% */
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1792,14 +1796,18 @@ body.zen-mode .zen-title {
   background: var(--surface);
   color: var(--text-1);
   border: 1px solid var(--border);
-  border-radius: 50px;
-  padding: 14px 16px;
+  border-radius: 0;
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
+  padding: 16px 8px;
+  /* Compact padding */
   font-size: 1.05rem;
   font-weight: 700;
   cursor: pointer;
   box-shadow: var(--shadow-sm);
   backdrop-filter: blur(10px);
   transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+  white-space: nowrap;
 }
 
 .fab-note-btn:hover {
