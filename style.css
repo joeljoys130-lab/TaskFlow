@@ -1453,30 +1453,47 @@ input[type="datetime-local"].meta-select {
 
   /* Header mobile fixes */
   .logo svg {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
   }
 
   .header-left {
-    gap: 8px;
+    gap: 6px;
   }
 
   .header-text h1 {
-    font-size: 1.3rem;
+    font-size: 1.15rem;
+  }
+
+  .subtitle {
+    font-size: 0.7rem;
   }
 
   .header-right {
-    gap: 6px;
+    gap: 4px;
   }
 
   .user-name {
     display: none;
   }
 
-  .theme-toggle {
+  .user-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 0.8rem;
+  }
+
+  .theme-toggle,
+  .logout-btn {
     width: 34px;
     height: 34px;
-    font-size: 1rem;
+    font-size: 1rem !important;
+  }
+
+  .theme-toggle svg,
+  .logout-btn svg {
+    width: 18px;
+    height: 18px;
   }
 
   .stats-bar {
@@ -1563,10 +1580,18 @@ input[type="datetime-local"].meta-select {
 
   /* Zen Mode mobile positioning */
   .exit-zen-btn {
-    top: max(10px, env(safe-area-inset-top));
-    right: max(10px, env(safe-area-inset-right));
-    padding: 8px 16px;
-    font-size: 0.85rem;
+    top: auto;
+    bottom: max(30px, env(safe-area-inset-bottom));
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    padding: 12px 24px;
+    font-size: 1rem;
+    white-space: nowrap;
+  }
+
+  .exit-zen-btn:hover {
+    transform: translateX(-50%) translateY(-2px);
   }
 
   .zen-title {
