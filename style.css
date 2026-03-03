@@ -1737,3 +1737,110 @@ body.zen-mode .zen-title {
     margin-bottom: 20px;
   }
 }
+
+/* ---------- Add Task FAB & Modal ---------- */
+.add-task-trigger-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.fab-add-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--grad);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 14px 28px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.fab-add-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(124, 58, 237, 0.5);
+}
+
+.fab-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.floating-input-section {
+  width: 90%;
+  max-width: 600px;
+  transform: translateY(20px) scale(0.95);
+  transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  margin-bottom: 0;
+}
+
+[data-theme="light"] .modal-overlay {
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.modal-overlay.active .floating-input-section {
+  transform: translateY(0) scale(1);
+}
+
+.add-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.add-modal-header h3 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 800;
+  background: var(--grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.close-add-modal {
+  background: none;
+  border: none;
+  color: var(--text-2);
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.2s;
+}
+
+.close-add-modal:hover {
+  color: var(--text-1);
+}
+
+body.zen-mode .add-task-trigger-wrap,
+body.zen-mode .modal-overlay {
+  display: none !important;
+}

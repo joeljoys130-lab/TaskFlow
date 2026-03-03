@@ -32,6 +32,10 @@ const toast = document.getElementById("toast");
 const dateDisplay = document.getElementById("date-display");
 const bulkClearCompleted = document.getElementById("clearCompleted");
 const bulkClearAll = document.getElementById("clearAll");
+// Add Task Modal
+const openAddModalBtn = document.getElementById("openAddModalBtn");
+const addTaskOverlay = document.getElementById("addTaskOverlay");
+const closeAddModal = document.getElementById("closeAddModal");
 // Confirm dialog
 const confirmOverlay = document.getElementById("confirmOverlay");
 const confirmTitle = document.getElementById("confirmTitle");
@@ -573,7 +577,11 @@ function addTask() {
   }
 
   taskInput.value = "";
-  taskInput.focus();
+  taskInput.blur(); // Remove focus since it's going away
+
+  if (addTaskOverlay) {
+    addTaskOverlay.classList.remove("active");
+  }
 
   showToast("✅ Task added!");
   render();
@@ -792,6 +800,25 @@ if (exitZenBtn) {
     isZenMode = false;
     document.body.classList.remove("zen-mode");
     render();
+  });
+}
+
+if (openAddModalBtn) {
+  openAddModalBtn.addEventListener("click", () => {
+    addTaskOverlay.classList.add("active");
+    setTimeout(() => taskInput.focus(), 100);
+  });
+}
+
+if (closeAddModal) {
+  closeAddModal.addEventListener("click", () => {
+    addTaskOverlay.classList.remove("active");
+  });
+}
+
+if (addTaskOverlay) {
+  addTaskOverlay.addEventListener("click", (e) => {
+    if (e.target === addTaskOverlay) addTaskOverlay.classList.remove("active");
   });
 }
 

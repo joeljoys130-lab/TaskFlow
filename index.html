@@ -462,72 +462,90 @@
       </div>
     </div>
 
-    <!-- Input Section -->
-    <div class="input-section">
-      <div class="input-card">
-        <div class="input-row">
-          <input type="text" id="taskInput" class="task-input" placeholder="What needs to be done? ✨" maxlength="120"
-            autocomplete="off" />
-          <div class="input-actions">
-            <button class="voice-btn" id="voiceBtn" aria-label="Use voice input" title="Dictate task">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                stroke-linejoin="round">
-                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
-                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                <line x1="12" y1="19" x2="12" y2="23"></line>
-                <line x1="8" y1="23" x2="16" y2="23"></line>
-              </svg>
-            </button>
-            <button class="add-btn" id="addBtn" aria-label="Add task">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-            </button>
+    <!-- Add Task Trigger Button -->
+    <div class="add-task-trigger-wrap">
+      <button class="fab-add-btn" id="openAddModalBtn" aria-label="Add new task">
+        <svg viewBox="0 0 24 24" fill="none" class="fab-icon" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round">
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
+        <span>New Task</span>
+      </button>
+    </div>
+
+    <!-- Input Section Modal -->
+    <div class="modal-overlay" id="addTaskOverlay">
+      <div class="input-section floating-input-section">
+        <div class="input-card">
+          <div class="add-modal-header">
+            <h3>New Task ✨</h3>
+            <button id="closeAddModal" class="close-add-modal" aria-label="Close">✕</button>
           </div>
-        </div>
-        <div class="meta-row">
-          <div class="meta-group">
-            <label for="prioritySelect" class="meta-label">Priority</label>
-            <select id="prioritySelect" class="meta-select">
-              <option value="low">🟢 Low</option>
-              <option value="medium" selected>🟡 Medium</option>
-              <option value="high">🔴 High</option>
-            </select>
-          </div>
-          <div class="meta-group">
-            <label for="categorySelect" class="meta-label">Category</label>
-            <select id="categorySelect" class="meta-select">
-              <option value="personal">👤 Personal</option>
-              <option value="work">💼 Work</option>
-              <option value="health">🏃 Health</option>
-              <option value="shopping">🛒 Shopping</option>
-              <option value="learning">📚 Learning</option>
-              <option value="other">📌 Other</option>
-            </select>
-          </div>
-          <div class="meta-group due-group">
-            <label for="dueDateInput" class="meta-label">Date & Time</label>
-            <div class="due-wrap">
-              <span class="due-icon">⏰</span>
-              <input type="text" id="dueDateInput" class="meta-select due-advanced" placeholder="Select time..." />
+          <div class="input-row">
+            <input type="text" id="taskInput" class="task-input" placeholder="What needs to be done?" maxlength="120"
+              autocomplete="off" />
+            <div class="input-actions">
+              <button class="voice-btn" id="voiceBtn" aria-label="Use voice input" title="Dictate task">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                  <line x1="12" y1="19" x2="12" y2="23"></line>
+                  <line x1="8" y1="23" x2="16" y2="23"></line>
+                </svg>
+              </button>
+              <button class="add-btn" id="addBtn" aria-label="Add task">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+              </button>
             </div>
-            <div class="quick-picks" id="addQuickPicks">
-              <button type="button" class="qp-btn" data-preset="1h">
-                +1h
-              </button>
-              <button type="button" class="qp-btn" data-preset="tonight">
-                Tonight
-              </button>
-              <button type="button" class="qp-btn" data-preset="tmrw">
-                Tmrw
-              </button>
-              <button type="button" class="qp-btn" data-preset="wknd">
-                Wknd
-              </button>
-              <button type="button" class="qp-btn" data-preset="clear">
-                ✖
-              </button>
+          </div>
+          <div class="meta-row">
+            <div class="meta-group">
+              <label for="prioritySelect" class="meta-label">Priority</label>
+              <select id="prioritySelect" class="meta-select">
+                <option value="low">🟢 Low</option>
+                <option value="medium" selected>🟡 Medium</option>
+                <option value="high">🔴 High</option>
+              </select>
+            </div>
+            <div class="meta-group">
+              <label for="categorySelect" class="meta-label">Category</label>
+              <select id="categorySelect" class="meta-select">
+                <option value="personal">👤 Personal</option>
+                <option value="work">💼 Work</option>
+                <option value="health">🏃 Health</option>
+                <option value="shopping">🛒 Shopping</option>
+                <option value="learning">📚 Learning</option>
+                <option value="other">📌 Other</option>
+              </select>
+            </div>
+            <div class="meta-group due-group">
+              <label for="dueDateInput" class="meta-label">Date & Time</label>
+              <div class="due-wrap">
+                <span class="due-icon">⏰</span>
+                <input type="text" id="dueDateInput" class="meta-select due-advanced" placeholder="Select time..." />
+              </div>
+              <div class="quick-picks" id="addQuickPicks">
+                <button type="button" class="qp-btn" data-preset="1h">
+                  +1h
+                </button>
+                <button type="button" class="qp-btn" data-preset="tonight">
+                  Tonight
+                </button>
+                <button type="button" class="qp-btn" data-preset="tmrw">
+                  Tmrw
+                </button>
+                <button type="button" class="qp-btn" data-preset="wknd">
+                  Wknd
+                </button>
+                <button type="button" class="qp-btn" data-preset="clear">
+                  ✖
+                </button>
+              </div>
             </div>
           </div>
         </div>
