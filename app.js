@@ -668,21 +668,29 @@ function checkReminders() {
         const ageMins = (now.getTime() - (task.createdAt || 0)) / (1000 * 60);
         if (ageMins < 1) return;
 
-        // Reminder 1: "Due Soon" (Exactly 13 ~ 16 minutes away)
-        if (diffMins > 13 && diffMins <= 16 && !task.notified15m && !task.notified1hr) {
-            task.notified1hr = true; // Legacy fallback flag
-            task.notified15m = true;
+        // Reminder 1: 1 Hour Before Due
+        if (diffMins > 55 && diffMins <= 61 && !task.notified1hr) {
+            task.notified1hr = true;
             updated = true;
             if (notifsSent < 2) {
-                notifyDevice("⏳ Almost Due", `"${task.text}" is due in 15 minutes!`);
+                notifyDevice("⏰ Almost Due", `"${task.text}" is due in about 1 hour!`);
                 notifsSent++;
             }
         }
 
-        // Reminder 2: "Due Now" (Exactly when due or past due up to 2 hours)
+        // Reminder 2: 15 Minutes Before Due
+        if (diffMins > 13 && diffMins <= 16 && !task.notified15m) {
+            task.notified15m = true;
+            updated = true;
+            if (notifsSent < 2) {
+                notifyDevice("⏳ Getting Close", `"${task.text}" is due in 15 minutes!`);
+                notifsSent++;
+            }
+        }
+
+        // Reminder 3: "Due Now" (Exactly when due or past due up to 2 hours)
         if (diffMins <= 0 && diffMins > -120 && !task.notifiedDue) {
             task.notifiedDue = true;
-            task.notified1hr = true; // Legacy fallback flag
             updated = true;
             if (notifsSent < 2) {
                 notifyDevice("🚨 Task Due Now!", `It's time for "${task.text}"`);
