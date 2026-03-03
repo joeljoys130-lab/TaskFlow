@@ -1749,22 +1749,27 @@ body.zen-mode .zen-title {
   }
 }
 
-/* ---------- Add Task FAB & Modal ---------- */
+/* ---------- Actions Wrap & modals ---------- */
 .add-task-trigger-wrap {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 12px;
   margin-bottom: 24px;
 }
 
 .fab-add-btn {
+  flex: 3;
+  /* 75% */
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   background: var(--grad);
   color: white;
   border: none;
   border-radius: 50px;
-  padding: 14px 28px;
+  padding: 14px 20px;
   font-size: 1.15rem;
   font-weight: 700;
   cursor: pointer;
@@ -1775,6 +1780,32 @@ body.zen-mode .zen-title {
 .fab-add-btn:hover {
   transform: translateY(-3px);
   box-shadow: 0 12px 30px rgba(124, 58, 237, 0.5);
+}
+
+.fab-note-btn {
+  flex: 1;
+  /* 25% */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--surface);
+  color: var(--text-1);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  padding: 14px 16px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(10px);
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.fab-note-btn:hover {
+  transform: translateY(-3px);
+  background: var(--surface-hover);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
 }
 
 .fab-icon {
