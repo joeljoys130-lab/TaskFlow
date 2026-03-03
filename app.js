@@ -10,6 +10,7 @@ let currentFilter = "all";
 let currentSort = "newest";
 let searchQuery = "";
 let editingId = null;
+let isZenMode = false;
 
 // ── DOM Refs ───────────────────────────────────────────────
 const taskInput = document.getElementById("taskInput");
@@ -25,6 +26,8 @@ const clearSearch = document.getElementById("clearSearch");
 const sortSelect = document.getElementById("sortSelect");
 const filterTabs = document.querySelectorAll(".filter-tab");
 const themeToggle = document.getElementById("themeToggle");
+const zenModeBtn = document.getElementById("zenModeBtn");
+const exitZenBtn = document.getElementById("exitZenBtn");
 const toast = document.getElementById("toast");
 const dateDisplay = document.getElementById("date-display");
 const bulkClearCompleted = document.getElementById("clearCompleted");
@@ -183,7 +186,7 @@ function formatFullDate() {
 function saveTasks() {
   try {
     localStorage.setItem("taskflow_tasks", JSON.stringify(tasks));
-  } catch (_) {}
+  } catch (_) { }
   syncTasksToCloud();
 }
 
@@ -258,7 +261,7 @@ async function syncTasksFromCloud() {
       tasks = doc.data().tasks;
       try {
         localStorage.setItem("taskflow_tasks", JSON.stringify(tasks));
-      } catch (_) {}
+      } catch (_) { }
       render();
       showAuthToast("☁️ Tasks synced from cloud!");
     } else {
@@ -274,7 +277,7 @@ function clearLocalTasks() {
   tasks = [];
   try {
     localStorage.removeItem("taskflow_tasks");
-  } catch (_) {}
+  } catch (_) { }
   render();
 }
 
@@ -290,7 +293,7 @@ function loadTasks() {
 function saveTheme(theme) {
   try {
     localStorage.setItem("taskflow_theme", theme);
-  } catch (_) {}
+  } catch (_) { }
 }
 
 function loadTheme() {
@@ -322,6 +325,13 @@ const PRIORITY_ORDER = { high: 0, medium: 1, low: 2 };
 // ── Filter & Sort Tasks ────────────────────────────────────
 function getFilteredTasks() {
   let filtered = [...tasks];
+
+  if (isZenMode) {
+    // Show up to 3 non-completed tasks prioritized
+    filtered = filtered.filter(t => !t.completed);
+    filtered.sort((a, b) => PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority]);
+    return filtered.slice(0, 3);
+  }
 
   // Search
   if (searchQuery.trim()) {
@@ -769,6 +779,22 @@ async function clearAll() {
 }
 
 // ── Event Listeners ────────────────────────────────────────
+if (zenModeBtn) {
+  zenModeBtn.addEventListener("click", () => {
+    isZenMode = true;
+    document.body.classList.add("zen-mode");
+    render();
+  });
+}
+
+if (exitZenBtn) {
+  exitZenBtn.addEventListener("click", () => {
+    isZenMode = false;
+    document.body.classList.remove("zen-mode");
+    render();
+  });
+}
+
 addBtn.addEventListener("click", addTask);
 
 taskInput.addEventListener("keydown", (e) => {
