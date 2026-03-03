@@ -935,7 +935,7 @@ function initDatePickers() {
   const config = {
     enableTime: true,
     altInput: true,
-    altFormat: "M j, h:i K",
+    altFormat: "M jh:i K",
     dateFormat: "Y-m-d\\TH:i",
     time_24hr: false,
     disableMobile: false, // Native mobile date pickers are heavily optimized and easier to use via wheels
