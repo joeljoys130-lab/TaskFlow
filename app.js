@@ -935,10 +935,10 @@ function initDatePickers() {
   const config = {
     enableTime: true,
     altInput: true,
-    altFormat: "M jh:i K",
+    altFormat: "M j, h:i K",
     dateFormat: "Y-m-d\\TH:i",
     time_24hr: false,
-    disableMobile: false, // Native mobile date pickers are heavily optimized and easier to use via wheels
+    disableMobile: true, // Forces Flatpickr UI on mobile for consistent 12-hour formatting
   };
   fpAdd = flatpickr(dueDateInput, config);
   fpEdit = flatpickr(editDueDate, config);
