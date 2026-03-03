@@ -1751,35 +1751,56 @@ body.zen-mode .zen-title {
 
 /* ---------- Add Task FAB & Modal ---------- */
 .add-task-trigger-wrap {
-  display: block;
-  width: calc(100% + 40px);
-  /* Fill the inner padding completely */
-  margin: 0 -20px 24px -20px !important;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 24px;
 }
 
 .fab-add-btn {
+  position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  gap: 10px;
+  width: 90%;
+  max-width: 450px;
+  /* Optional max width on desktop */
+  gap: 12px;
   background: var(--grad);
   color: white;
   border: none;
-  border-radius: 0;
-  /* Remove borders to bleed explicitly horizontal on mobile entirely */
-  padding: 18px 20px;
-  font-size: 1.25rem;
-  font-weight: 800;
+  border-radius: 50px;
+  /* Elegant pill shape */
+  padding: 16px 24px;
+  font-size: 1.15rem;
+  letter-spacing: 0.5px;
+  font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 8px 15px rgba(124, 58, 237, 0.4);
-  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 10px 25px -5px rgba(124, 58, 237, 0.5), 0 0 15px rgba(59, 130, 246, 0.3);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   white-space: nowrap;
 }
 
+.fab-add-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 100%);
+  transform: skewX(-25deg);
+  transition: all 0.75s ease;
+}
+
+.fab-add-btn:hover::after {
+  left: 150%;
+}
+
 .fab-add-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 25px rgba(124, 58, 237, 0.5);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 15px 35px -5px rgba(124, 58, 237, 0.6), 0 0 20px rgba(59, 130, 246, 0.4);
 }
 
 .fab-icon {
