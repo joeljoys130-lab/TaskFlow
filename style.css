@@ -66,6 +66,7 @@ body {
   background: var(--bg-1);
   color: var(--text-1);
   min-height: 100vh;
+  min-height: 100svh;
   overflow-x: hidden;
   transition:
     background var(--transition),
@@ -139,7 +140,9 @@ body {
   z-index: 1;
   max-width: var(--max-w);
   margin: 0 auto;
-  padding: 24px 16px 100px;
+  padding: max(24px, env(safe-area-inset-top))
+    max(16px, env(safe-area-inset-right))
+    max(100px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
 }
 
 /* ---------- Header ---------- */
@@ -1546,5 +1549,14 @@ input[type="datetime-local"].meta-select {
   .filter-tab {
     font-size: 0.7rem;
     padding: 5px 8px;
+  }
+}
+
+/* ── iOS Safe Area & Zoom Prevent ── */
+@media screen and (max-width: 768px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
   }
 }
