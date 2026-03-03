@@ -351,25 +351,39 @@ body {
     background: rgba(255, 255, 255, .7);
 }
 
-.add-btn {
-    background: var(--grad);
-    border: none;
+.input-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.add-btn,
+.voice-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    color: white;
+    color: var(--text-2);
     cursor: pointer;
-    width: 50px;
-    height: 50px;
+    width: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    box-shadow: 0 4px 20px rgba(124, 58, 237, .45);
     transition: var(--transition);
 }
 
-.add-btn svg {
-    width: 22px;
-    height: 22px;
+.add-btn {
+    background: var(--grad);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 20px rgba(124, 58, 237, .45);
+}
+
+.add-btn svg,
+.voice-btn svg {
+    width: 20px;
+    height: 20px;
 }
 
 .add-btn:hover {
@@ -379,6 +393,32 @@ body {
 
 .add-btn:active {
     transform: scale(.96);
+}
+
+.voice-btn:hover {
+    background: var(--surface-hover);
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.voice-btn.listening {
+    color: var(--danger);
+    border-color: var(--danger);
+    animation: pulseMic 1.5s infinite;
+}
+
+@keyframes pulseMic {
+    0% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+    }
 }
 
 .meta-row {

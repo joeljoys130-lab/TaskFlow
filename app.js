@@ -14,6 +14,7 @@ let editingId = null;
 // ── DOM Refs ───────────────────────────────────────────────
 const taskInput = document.getElementById('taskInput');
 const addBtn = document.getElementById('addBtn');
+const voiceBtn = document.getElementById('voiceBtn');
 const prioritySelect = document.getElementById('prioritySelect');
 const categorySelect = document.getElementById('categorySelect');
 const dueDateInput = document.getElementById('dueDateInput');
@@ -602,6 +603,48 @@ editInput.addEventListener('keydown', e => { if (e.key === 'Enter') saveEdit(); 
 // Bulk
 bulkClearCompleted.addEventListener('click', clearCompleted);
 bulkClearAll.addEventListener('click', clearAll);
+
+// ── Voice Input (Speech Recognition) ─────────────────────────
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (SpeechRecognition) {
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+
+    recognition.onstart = function () {
+        voiceBtn.classList.add('listening');
+        taskInput.placeholder = "Listening... Speak now 🎙️";
+    };
+
+    recognition.onresult = function (event) {
+        const transcript = event.results[0][0].transcript;
+        taskInput.value = transcript;
+        taskInput.focus();
+    };
+
+    recognition.onend = function () {
+        voiceBtn.classList.remove('listening');
+        taskInput.placeholder = "What needs to be done? ✨";
+    };
+
+    recognition.onerror = function (event) {
+        voiceBtn.classList.remove('listening');
+        taskInput.placeholder = "What needs to be done? ✨";
+        showToast('⚠️ Voice input error: ' + event.error);
+    };
+
+    voiceBtn.addEventListener('click', () => {
+        if (voiceBtn.classList.contains('listening')) {
+            recognition.stop();
+        } else {
+            recognition.start();
+        }
+    });
+} else {
+    // Hide or disable the button if speeches are not supported
+    voiceBtn.style.display = 'none';
+}
 
 // ── Quick Picks & Flatpickr ──────────────────────────────────
 let fpAdd, fpEdit;
