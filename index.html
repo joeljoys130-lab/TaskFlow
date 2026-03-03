@@ -670,11 +670,10 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.getRegistrations().then(function (registrations) {
-                    for (let registration of registrations) {
-                        registration.unregister();
-                        console.log('Unregistered old ServiceWorker');
-                    }
+                navigator.serviceWorker.register('./sw.js').then((registration) => {
+                    console.log('ServiceWorker registered:', registration.scope);
+                }).catch((err) => {
+                    console.log('ServiceWorker registration failed:', err);
                 });
             });
         }

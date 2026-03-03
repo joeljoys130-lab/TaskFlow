@@ -63,12 +63,29 @@ function today() {
 
 function notifyDevice(title, body) {
     if (!("Notification" in window)) return;
+
+    const showNotification = () => {
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.ready.then(registration => {
+                registration.showNotification(title, {
+                    body: body,
+                    icon: 'icon.svg',
+                    vibrate: [200, 100, 200]
+                });
+            }).catch(() => {
+                new Notification(title, { body, icon: 'icon.svg' });
+            });
+        } else {
+            new Notification(title, { body, icon: 'icon.svg' });
+        }
+    };
+
     if (Notification.permission === "granted") {
-        new Notification(title, { body });
+        showNotification();
     } else if (Notification.permission !== "denied") {
         Notification.requestPermission().then(permission => {
             if (permission === "granted") {
-                new Notification(title, { body });
+                showNotification();
             }
         });
     }
