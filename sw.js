@@ -57,3 +57,41 @@ self.addEventListener('activate', event => {
         })
     );
 });
+
+// Handle Notification Clicks and Actions
+self.addEventListener('notificationclick', event => {
+    event.notification.close();
+
+    const action = event.action;
+    const taskId = event.notification.data ? event.notification.data.taskId : null;
+
+    event.waitUntil(
+        self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
+            // Action: Mark as Done
+            if (action === 'mark-done' && taskId) {
+                // If app is already open, focus it and tell it to mark the task as done
+                for (const client of clientList) {
+                    if (client.url.indexOf('/') !== -1 && 'focus' in client) {
+                        client.focus();
+                        client.postMessage({ type: 'MARK_DONE', taskId: taskId });
+                        return;
+                    }
+                }
+                // If app is closed, open it with a special URL parameter
+                if (self.clients.openWindow) {
+                    return self.clients.openWindow('/?action=mark-done&taskId=' + taskId);
+                }
+            } else {
+                // Default action (just clicked notification body)
+                for (const client of clientList) {
+                    if (client.url.indexOf('/') !== -1 && 'focus' in client) {
+                        return client.focus();
+                    }
+                }
+                if (self.clients.openWindow) {
+                    return self.clients.openWindow('/');
+                }
+            }
+        })
+    );
+});

@@ -61,17 +61,25 @@ function today() {
     return new Date().toISOString().split('T')[0];
 }
 
-function notifyDevice(title, body) {
+function notifyDevice(title, body, taskId = null) {
     if (!("Notification" in window)) return;
 
     const showNotification = () => {
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.ready.then(registration => {
-                registration.showNotification(title, {
+                const options = {
                     body: body,
                     icon: 'icon.svg',
                     vibrate: [200, 100, 200]
-                });
+                };
+                if (taskId) {
+                    options.data = { taskId: taskId };
+                    options.actions = [
+                        { action: 'mark-done', title: '✅ Mark as Done' },
+                        { action: 'open', title: 'Open App' }
+                    ];
+                }
+                registration.showNotification(title, options);
             }).catch(() => {
                 new Notification(title, { body, icon: 'icon.svg' });
             });
@@ -673,7 +681,7 @@ function checkReminders() {
             task.notified1hr = true;
             updated = true;
             if (notifsSent < 2) {
-                notifyDevice("⏰ Almost Due", `"${task.text}" is due in about 1 hour!`);
+                notifyDevice("⏰ Almost Due", `"${task.text}" is due in about 1 hour!`, task.id);
                 notifsSent++;
             }
         }
@@ -683,7 +691,7 @@ function checkReminders() {
             task.notified15m = true;
             updated = true;
             if (notifsSent < 2) {
-                notifyDevice("⏳ Getting Close", `"${task.text}" is due in 15 minutes!`);
+                notifyDevice("⏳ Getting Close", `"${task.text}" is due in 15 minutes!`, task.id);
                 notifsSent++;
             }
         }
@@ -693,7 +701,7 @@ function checkReminders() {
             task.notifiedDue = true;
             updated = true;
             if (notifsSent < 2) {
-                notifyDevice("🚨 Task Due Now!", `It's time for "${task.text}"`);
+                notifyDevice("🚨 Task Due Now!", `It's time for "${task.text}"`, task.id);
                 notifsSent++;
             }
         }
@@ -703,9 +711,38 @@ function checkReminders() {
 }
 setInterval(checkReminders, 60000); // Check every minute
 
+// Listen for SW Messages
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('message', event => {
+        if (event.data && event.data.type === 'MARK_DONE') {
+            const task = tasks.find(t => t.id === event.data.taskId);
+            if (task && !task.completed) {
+                task.completed = true;
+                saveTasks();
+                render();
+                showToast('🎉 Task marked as complete from notification!');
+            }
+        }
+    });
+}
+
 // ── Init ───────────────────────────────────────────────────
 function init() {
     loadTasks();
+
+    // Check if app was opened via a notification action
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('action') === 'mark-done') {
+        const taskId = params.get('taskId');
+        const task = tasks.find(t => t.id === taskId);
+        if (task && !task.completed) {
+            task.completed = true;
+            saveTasks();
+            setTimeout(() => showToast('🎉 Task completed from notification!'), 500);
+        }
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
     applyTheme(loadTheme());
     injectSvgGradients();
     initDatePickers();
