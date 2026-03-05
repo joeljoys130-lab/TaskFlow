@@ -150,7 +150,7 @@ body {
   z-index: 1;
   max-width: var(--max-w);
   margin: 0 auto;
-  padding: max(24px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left));
+  padding: max(24px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -1138,20 +1138,9 @@ input[type="datetime-local"].meta-select {
 .bulk-actions {
   display: flex;
   gap: 10px;
-  margin-top: 20px;
+  margin-top: auto;
+  padding-top: 20px;
   flex-wrap: wrap;
-  position: sticky;
-  bottom: 0;
-  padding: 16px;
-  margin-left: -16px;
-  margin-right: -16px;
-  background: var(--surface);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
-  border-top: 1px solid var(--border);
-  border-radius: var(--radius) var(--radius) 0 0;
-  z-index: 100;
-  padding-bottom: max(16px, env(safe-area-inset-bottom));
 }
 
 .bulk-btn {
