@@ -4,12 +4,12 @@
 
 /* ---------- CSS Custom Properties ---------- */
 :root {
-  /* True Dark Mode Colors */
-  --bg-1: #000000;
-  --bg-2: #0a0a0a;
-  --surface: rgba(20, 20, 20, 0.7);
-  --surface-hover: rgba(30, 30, 30, 0.9);
-  --border: rgba(255, 255, 255, 0.08);
+  /* True Dark Mode Colors (Deep Space Vibrant) */
+  --bg-1: #050512;
+  --bg-2: #0a0a1a;
+  --surface: rgba(18, 14, 36, 0.45);
+  --surface-hover: rgba(30, 24, 60, 0.65);
+  --border: rgba(148, 97, 253, 0.18);
 
   /* Brand / Accents */
   --primary: #9461fd;
@@ -33,12 +33,13 @@
       rgba(148, 97, 253, 0.25) 0%,
       rgba(77, 145, 255, 0.25) 100%);
   --shadow-lg: 0 30px 60px rgba(0, 0, 0, 0.8);
-  --shadow-sm: 0 8px 25px rgba(0, 0, 0, 0.5);
+  --shadow-sm: 0 8px 30px rgba(0, 0, 0, 0.6);
 
   /* UI Tokens */
-  --radius: 18px;
-  --radius-sm: 10px;
-  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --radius: 20px;
+  --radius-sm: 14px;
+  --transition: 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* Bouncy animation */
   --font: "Outfit", system-ui, sans-serif;
   --max-w: 780px;
 }
@@ -158,6 +159,17 @@ body {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 28px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--surface);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  padding: 16px;
+  margin-left: -16px;
+  margin-right: -16px;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0 0 var(--radius) var(--radius);
 }
 
 .header-left {
@@ -323,16 +335,18 @@ body {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  backdrop-filter: blur(16px);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
   padding: 20px;
   box-shadow: var(--shadow-sm);
   transition: var(--transition);
 }
 
 .input-card:focus-within {
-  border-color: rgba(124, 58, 237, 0.4);
+  border-color: var(--primary);
   box-shadow:
-    0 0 0 3px rgba(124, 58, 237, 0.12),
+    0 0 0 3px rgba(148, 97, 253, 0.25),
+    0 0 20px rgba(148, 97, 253, 0.3),
     var(--shadow-sm);
 }
 
@@ -786,15 +800,37 @@ input[type="datetime-local"].meta-select {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  backdrop-filter: blur(12px);
-  padding: 14px 16px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 16px 18px;
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: 14px;
   transition: var(--transition);
-  animation: slideIn 0.3s ease forwards;
+  animation: slideIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation-fill-mode: both;
   position: relative;
   overflow: hidden;
+}
+
+.task-list .task-item:nth-child(1) {
+  animation-delay: 0.05s;
+}
+
+.task-list .task-item:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.task-list .task-item:nth-child(3) {
+  animation-delay: 0.15s;
+}
+
+.task-list .task-item:nth-child(4) {
+  animation-delay: 0.2s;
+}
+
+.task-list .task-item:nth-child(5) {
+  animation-delay: 0.25s;
 }
 
 .task-item::before {
@@ -839,7 +875,7 @@ input[type="datetime-local"].meta-select {
 @keyframes slideIn {
   from {
     opacity: 0;
-    transform: translateY(-10px) scale(0.98);
+    transform: translateY(20px) scale(0.95);
   }
 
   to {
@@ -894,22 +930,23 @@ input[type="datetime-local"].meta-select {
 .task-check::after {
   content: "✔";
   position: absolute;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   color: white;
   opacity: 0;
-  transform: scale(0.5);
-  transition: var(--transition);
+  transform: scale(0) rotate(-45deg);
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .task-check:checked {
   background: var(--grad);
   border-color: transparent;
-  box-shadow: 0 2px 10px rgba(124, 58, 237, 0.5);
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.4);
 }
 
 .task-check:checked::after {
   opacity: 1;
-  transform: scale(1);
+  transform: scale(1) rotate(0deg);
 }
 
 .task-check:hover {
