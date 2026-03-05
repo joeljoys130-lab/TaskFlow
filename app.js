@@ -439,7 +439,7 @@ function createTaskEl(task) {
     <div class="task-actions">
 
       <button class="task-action-btn edit" data-id="${task.id}" title="Edit task" aria-label="Edit task">✏️</button>
-      <button class="task-action-btn del" data-id="${task.id}" title="Delete task" aria-label="Delete task">🗑️</button>
+      <button class="task-action-btn del" data-id="${task.id}" title="Delete task" aria-label="Delete task">❌</button>
     </div>
   `;
 
