@@ -567,20 +567,8 @@ async function doLogin() {
     showMainApp(user);
     showAuthToast(`👋 Welcome back, ${user.name}!`);
   } catch (error) {
-    let errString = "";
-    try { errString = typeof error === 'object' ? JSON.stringify(error) : String(error); } catch (e) { errString = String(error); }
-    const errMsg = error.message || errString;
-
-    if (
-      error.code === "auth/wrong-password" ||
-      error.code === "auth/invalid-credential" ||
-      errString.includes("INVALID_LOGIN_CREDENTIALS") ||
-      errMsg.includes("INVALID_LOGIN_CREDENTIALS")
-    ) {
-      showErr(loginErr, "Incorrect password");
-    } else {
-      showErr(loginErr, errMsg);
-    }
+    console.error("Login error:", error);
+    showErr(loginErr, "Incorrect password");
   } finally {
     loginBtn.disabled = false;
     loginBtn.innerHTML = `<span>Sign In</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
