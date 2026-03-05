@@ -678,13 +678,25 @@ input[type="datetime-local"].meta-select {
   justify-content: space-between;
   gap: 10px;
   margin-bottom: 12px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .filter-tabs {
   display: flex;
   gap: 6px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  flex: 1;
+}
+
+.filter-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.sort-group {
+  flex-shrink: 0;
 }
 
 .filter-tab {
