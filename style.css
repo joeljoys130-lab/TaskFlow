@@ -1822,7 +1822,7 @@ body.zen-mode .zen-title {
   justify-content: center;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.15s ease-out;
 }
 
 .modal-overlay.active {
@@ -1834,7 +1834,7 @@ body.zen-mode .zen-title {
   width: 90%;
   max-width: 600px;
   transform: translateY(20px) scale(0.95);
-  transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  transition: transform 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28);
   margin-bottom: 0;
 }
 
