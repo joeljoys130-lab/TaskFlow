@@ -51,6 +51,7 @@ const editPriority = document.getElementById("editPriority");
 const editCategory = document.getElementById("editCategory");
 const editDueDate = document.getElementById("editDueDate");
 const editNotes = document.getElementById("editNotes");
+const editReminder = document.getElementById("editReminder");
 const modalClose = document.getElementById("modalClose");
 const modalCancel = document.getElementById("modalCancel");
 const modalSave = document.getElementById("modalSave");
@@ -58,6 +59,7 @@ const modalSave = document.getElementById("modalSave");
 // Stats
 const statTotal = document.getElementById("stat-total");
 const statActive = document.getElementById("stat-active");
+const reminderSelect = document.getElementById("reminderSelect");
 const statDone = document.getElementById("stat-done");
 const ringFill = document.getElementById("ringFill");
 const ringPct = document.getElementById("ringPct");
@@ -549,6 +551,7 @@ function addTask() {
   }
 
   const finalDueDate = dueDateInput.value || parsedDate;
+  const reminderVal = reminderSelect ? parseInt(reminderSelect.value) : 0;
 
   const task = {
     id: uid(),
@@ -560,7 +563,9 @@ function addTask() {
     completed: false,
     notified1hr: false,
     notified15m: false,
+    notifiedCustom: false,
     notifiedDue: false,
+    reminderMinutes: reminderVal,
     createdAt: Date.now(),
   };
 
@@ -576,6 +581,7 @@ function addTask() {
   }
 
   taskInput.value = "";
+  if (reminderSelect) reminderSelect.value = "0";
   taskInput.blur(); // Remove focus since it's going away
 
   if (addTaskOverlay) {
@@ -617,6 +623,7 @@ function openEditModal(id) {
   editCategory.value = task.category;
   editDueDate.value = task.dueDate || "";
   editNotes.value = task.notes || "";
+  if (editReminder) editReminder.value = task.reminderMinutes || 0;
   modalOverlay.classList.add("open");
   setTimeout(() => editInput.focus(), 100);
 }
@@ -637,13 +644,15 @@ function saveEdit() {
   task.text = text;
   task.priority = editPriority.value;
   task.category = editCategory.value;
-  if (task.dueDate !== editDueDate.value) {
+  if (task.dueDate !== editDueDate.value || task.reminderMinutes !== (editReminder ? parseInt(editReminder.value) : 0)) {
     task.notified1hr = false;
     task.notified15m = false;
+    task.notifiedCustom = false;
     task.notifiedDue = false;
   }
   task.dueDate = editDueDate.value || "";
   task.notes = editNotes.value.trim();
+  task.reminderMinutes = editReminder ? parseInt(editReminder.value) : (task.reminderMinutes || 0);
   saveTasks();
   render();
   closeModal();
@@ -941,6 +950,22 @@ function checkReminders() {
     // Anti-Spam: Do not notify if this task was *just* created within the last 1 minute
     const ageMins = (now.getTime() - (task.createdAt || 0)) / (1000 * 60);
     if (ageMins < 1) return;
+
+    // Custom Reminder
+    if (task.reminderMinutes > 0 && !task.notifiedCustom) {
+      if (diffMins > (task.reminderMinutes - 2) && diffMins <= (task.reminderMinutes + 5)) {
+        task.notifiedCustom = true;
+        updated = true;
+        if (notifsSent < 2) {
+          notifyDevice(
+            "🔔 Custom Reminder",
+            `"${task.text}" is due in ${task.reminderMinutes} minutes.`,
+            task.id,
+          );
+          notifsSent++;
+        }
+      }
+    }
 
     // Reminder 1: 1 Hour Before Due
     if (diffMins > 55 && diffMins <= 61 && !task.notified1hr) {

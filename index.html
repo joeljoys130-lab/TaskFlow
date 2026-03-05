@@ -100,12 +100,14 @@
             </div>
           </div>
 
-          <div class="auth-row">
+          <div class="auth-row" style="display:flex; justify-content:space-between; align-items:center;">
             <label class="remember-label">
               <input type="checkbox" id="loginRemember" />
               <span class="checkmark"></span>
               Remember me
             </label>
+            <button type="button" class="link-btn" id="forgotPassBtn" style="font-size:0.8rem;">Forgot
+              password?</button>
           </div>
 
           <p class="auth-err" id="loginErr"></p>
@@ -548,6 +550,16 @@
                 </button>
               </div>
             </div>
+            <div class="meta-group">
+              <label for="reminderSelect" class="meta-label">Reminder</label>
+              <select id="reminderSelect" class="meta-select">
+                <option value="0">🔕 None</option>
+                <option value="15">15 min before</option>
+                <option value="30">30 min before</option>
+                <option value="60">1 hr before</option>
+                <option value="1440">1 day before</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
@@ -685,6 +697,16 @@
                 ✖
               </button>
             </div>
+          </div>
+          <div class="meta-group">
+            <label for="editReminder" class="meta-label">Reminder</label>
+            <select id="editReminder" class="meta-select">
+              <option value="0">🔕 None</option>
+              <option value="15">15 min before</option>
+              <option value="30">30 min before</option>
+              <option value="60">1 hr before</option>
+              <option value="1440">1 day before</option>
+            </select>
           </div>
         </div>
         <textarea id="editNotes" class="edit-notes" placeholder="Add a note… (optional)" rows="3"></textarea>

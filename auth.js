@@ -576,6 +576,45 @@ async function doLogin() {
 }
 
 // ══════════════════════════════════════════════════════════════
+//  FORGOT PASSWORD
+// ══════════════════════════════════════════════════════════════
+const forgotPassBtn = document.getElementById("forgotPassBtn");
+if (forgotPassBtn) {
+  forgotPassBtn.addEventListener("click", async () => {
+    const email = loginEmail.value.trim().toLowerCase();
+
+    // We already do simple validation here
+    if (!email || !email.includes("@")) {
+      showErr(loginErr, "Please enter your email above first to reset password.");
+      loginEmail.focus();
+      return;
+    }
+
+    const { sendPasswordResetEmail } = await import(
+      "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js"
+    );
+
+    try {
+      forgotPassBtn.disabled = true;
+      forgotPassBtn.innerText = "Sending...";
+      await sendPasswordResetEmail(auth, email);
+      showAuthToast("📧 Password reset email sent! Check your inbox.");
+      showErr(loginErr, ""); // clear any errors
+    } catch (error) {
+      console.error(error);
+      if (error.code === "auth/user-not-found" || error.message.includes("not found")) {
+        showErr(loginErr, "No account found with this email.");
+      } else {
+        showErr(loginErr, "Failed to send reset email. " + error.message);
+      }
+    } finally {
+      forgotPassBtn.disabled = false;
+      forgotPassBtn.innerText = "Forgot password?";
+    }
+  });
+}
+
+// ══════════════════════════════════════════════════════════════
 //  LOGOUT
 // ══════════════════════════════════════════════════════════════
 logoutBtn.addEventListener("click", () => {
