@@ -585,63 +585,62 @@
         </button>
       </div>
     </div>
-  </div>
 
-  <!-- Search & Sort -->
-  <div class="search-wrap" style="display: flex; gap: 10px; margin-bottom: 16px; align-items: center;">
-    <div class="search-box" style="flex: 1;">
-      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8" />
-        <line x1="21" y1="21" x2="16.65" y2="16.65" />
-      </svg>
-      <input type="text" id="searchInput" class="search-input" placeholder="Search tasks…" autocomplete="off"
-        aria-label="Search tasks" />
-      <button class="clear-search" id="clearSearch" aria-label="Clear search">
-        ✕
+    <!-- Search & Sort -->
+    <div class="search-wrap" style="display: flex; gap: 10px; margin-bottom: 16px; align-items: center;">
+      <div class="search-box" style="flex: 1;">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        <input type="text" id="searchInput" class="search-input" placeholder="Search tasks…" autocomplete="off"
+          aria-label="Search tasks" />
+        <button class="clear-search" id="clearSearch" aria-label="Clear search">
+          ✕
+        </button>
+      </div>
+      <div class="sort-group" style="flex-shrink: 0;">
+        <select id="sortSelect" class="meta-select small" aria-label="Sort tasks"
+          style="height: 100%; border-radius: 50px;">
+          <option value="newest">Newest</option>
+          <option value="oldest">Oldest</option>
+          <option value="priority">Priority</option>
+          <option value="duedate">Due Date</option>
+          <option value="alpha">A–Z</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Task List -->
+    <main class="task-list-wrap" id="taskListWrap">
+      <ul class="task-list" id="taskList" aria-label="Task list"></ul>
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon">🎯</div>
+        <p class="empty-title">No tasks here!</p>
+        <p class="empty-sub">Add a task above to get started.</p>
+      </div>
+    </main>
+
+    <!-- Bulk Actions -->
+    <div class="bulk-actions" id="bulkActions">
+      <button class="bulk-btn" id="clearCompleted">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+        Clear Completed
+      </button>
+      <button class="bulk-btn danger" id="clearAll">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6" />
+          <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+          <path d="M10 11v6M14 11v6" />
+          <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" />
+        </svg>
+        Clear All
       </button>
     </div>
-    <div class="sort-group" style="flex-shrink: 0;">
-      <select id="sortSelect" class="meta-select small" aria-label="Sort tasks"
-        style="height: 100%; border-radius: 50px;">
-        <option value="newest">Newest</option>
-        <option value="oldest">Oldest</option>
-        <option value="priority">Priority</option>
-        <option value="duedate">Due Date</option>
-        <option value="alpha">A–Z</option>
-      </select>
-    </div>
-  </div>
-
-  <!-- Task List -->
-  <main class="task-list-wrap" id="taskListWrap">
-    <ul class="task-list" id="taskList" aria-label="Task list"></ul>
-    <div class="empty-state" id="emptyState">
-      <div class="empty-icon">🎯</div>
-      <p class="empty-title">No tasks here!</p>
-      <p class="empty-sub">Add a task above to get started.</p>
-    </div>
-  </main>
-
-  <!-- Bulk Actions -->
-  <div class="bulk-actions" id="bulkActions">
-    <button class="bulk-btn" id="clearCompleted">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-        stroke-linejoin="round">
-        <polyline points="20 6 9 17 4 12" />
-      </svg>
-      Clear Completed
-    </button>
-    <button class="bulk-btn danger" id="clearAll">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-        stroke-linejoin="round">
-        <polyline points="3 6 5 6 21 6" />
-        <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
-        <path d="M10 11v6M14 11v6" />
-        <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" />
-      </svg>
-      Clear All
-    </button>
-  </div>
   </div>
   <!-- /#mainApp -->
 
