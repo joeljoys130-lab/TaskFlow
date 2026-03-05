@@ -567,10 +567,19 @@ async function doLogin() {
     showMainApp(user);
     showAuthToast(`👋 Welcome back, ${user.name}!`);
   } catch (error) {
-    if (error.code === "auth/wrong-password" || error.code === "auth/invalid-credential") {
+    let errString = "";
+    try { errString = typeof error === 'object' ? JSON.stringify(error) : String(error); } catch (e) { errString = String(error); }
+    const errMsg = error.message || errString;
+
+    if (
+      error.code === "auth/wrong-password" ||
+      error.code === "auth/invalid-credential" ||
+      errString.includes("INVALID_LOGIN_CREDENTIALS") ||
+      errMsg.includes("INVALID_LOGIN_CREDENTIALS")
+    ) {
       showErr(loginErr, "Incorrect password");
     } else {
-      showErr(loginErr, error.message);
+      showErr(loginErr, errMsg);
     }
   } finally {
     loginBtn.disabled = false;
