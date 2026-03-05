@@ -675,6 +675,7 @@ input[type="datetime-local"].meta-select {
 .filter-bar {
   display: flex;
   align-items: center;
+  /* Center vertically */
   justify-content: space-between;
   gap: 10px;
   margin-bottom: 12px;
@@ -683,6 +684,7 @@ input[type="datetime-local"].meta-select {
 
 .filter-tabs {
   display: flex;
+  align-items: center;
   gap: 6px;
   flex-wrap: nowrap;
   overflow-x: auto;
@@ -690,6 +692,8 @@ input[type="datetime-local"].meta-select {
   -ms-overflow-style: none;
   flex: 1;
   min-width: 0;
+  padding-bottom: 4px;
+  /* Space for hidden scrollbar */
 }
 
 .filter-tabs::-webkit-scrollbar {
@@ -698,6 +702,14 @@ input[type="datetime-local"].meta-select {
 
 .sort-group {
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.sort-group .meta-select {
+  margin-bottom: 4px;
+  /* Match filter-tabs padding */
 }
 
 .filter-tab {
