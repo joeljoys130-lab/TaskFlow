@@ -1,0 +1,30 @@
+﻿f090ee2 Remove swipe and drag-and-drop features
+9e11062 Phase 2-4: Recurring tasks, Subtasks, Custom reminders, Color labels, Stats chart, Streaks, Export CSV
+f5b900e Phase 1: Forgot password, swipe to complete/delete, drag-and-drop reorder
+abc0409 Bump SW cache to v21 to force phones to reload updated auth.js
+d500f72 Unconditionally display Incorrect password on login failure
+dd86813 Robust handling of Firebase REST API INVALID_LOGIN_CREDENTIALS error stringification
+97f534d Remove focus timer; Fix wrong password error message
+2fcd60a Chore: bump cache for modal anim
+ee7f71a UI: Speed up modal popup animations to remove perceived lag
+d85fb86 UI: Refine new task button
+92be3d5 Layout: restore QuickNotes to header and make New Task button fullscreen width
+af8f401 Layout: Force side-by-side Add Task/Note buttons to span edge-to-edge ignoring parent padding constraints
+e547e3a Layout: update New Task and Add Note buttons to display side-by-side with a 75:25 ratio
+48afd32 Add Quick Notes (diary) feature with local storage, dedicated modal, and unique voice dictation support
+4f3cea2 Enhance dark mode with true-black background and punchier contrast
+18246e7 Revert altFormat changes
+e9cac14 Fix time format typing (from 'jh' to 'j, h') to clarify 12-hour time and stop misinterpretation as 24-hour time
+41456a7 Fix character encoding issue (restored UTF-8 emojis)
+c992795 Revert time formatting changes to previous state
+b28dd37 Fix time format: standard 12-hour AM/PM with proper spacing for Flatpickr and force custom UI on mobile
+ae397b4 Convert static task input into a floating Add Task modal to reduce overwhelm
+f306816 Position exit zen button at top right under title
+c8531e7 Fix Zen mode mobile button centering conflict with fade animation
+25096b2 Fix Zen mode mobile button stretching bug
+a72810f Bump service worker so cache clears for new design
+470ba8b Fix Zen mode mobile button alignment and fix header overflow
+76c632c Enhance Zen Mode UI and fix mobile header button alignment
+d35aabe Bump service worker cache version to v4 to propagate app updates to devices
+82e2cb2 Add Zen Mode feature to reduce user overwhelm
+5564744 fix(pwa): Update manifest background color
