@@ -439,7 +439,14 @@ function createTaskEl(task) {
     <div class="task-actions">
 
       <button class="task-action-btn edit" data-id="${task.id}" title="Edit task" aria-label="Edit task">✏️</button>
-      <button class="task-action-btn del" data-id="${task.id}" title="Delete task" aria-label="Delete task">❌</button>
+      <button class="task-action-btn del" data-id="${task.id}" title="Delete task" aria-label="Delete task">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;">
+          <polyline points="3 6 5 6 21 6" />
+          <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+          <path d="M10 11v6M14 11v6" />
+          <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" />
+        </svg>
+      </button>
     </div>
   `;
 
