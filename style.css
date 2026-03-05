@@ -689,6 +689,7 @@ input[type="datetime-local"].meta-select {
   scrollbar-width: none;
   -ms-overflow-style: none;
   flex: 1;
+  min-width: 0;
 }
 
 .filter-tabs::-webkit-scrollbar {
@@ -711,6 +712,7 @@ input[type="datetime-local"].meta-select {
   cursor: pointer;
   transition: var(--transition);
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .filter-tab:hover {
