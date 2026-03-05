@@ -567,7 +567,11 @@ async function doLogin() {
     showMainApp(user);
     showAuthToast(`👋 Welcome back, ${user.name}!`);
   } catch (error) {
-    showErr(loginErr, error.message);
+    if (error.code === "auth/wrong-password" || error.code === "auth/invalid-credential") {
+      showErr(loginErr, "Incorrect password");
+    } else {
+      showErr(loginErr, error.message);
+    }
   } finally {
     loginBtn.disabled = false;
     loginBtn.innerHTML = `<span>Sign In</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
@@ -657,7 +661,7 @@ setupSaveBtn?.addEventListener("click", () => {
         signupConfirm.value = saved.pass;
       }
       localStorage.removeItem("taskflow_pending_signup");
-    } catch {}
+    } catch { }
     showScreen(screenSignup);
     showAuthToast("✅ Email configured! Click Create Account to continue.");
   } else if (ret) {

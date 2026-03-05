@@ -54,14 +54,7 @@ const editNotes = document.getElementById("editNotes");
 const modalClose = document.getElementById("modalClose");
 const modalCancel = document.getElementById("modalCancel");
 const modalSave = document.getElementById("modalSave");
-// Timer Modal
-const timerOverlay = document.getElementById("timerOverlay");
-const timerClose = document.getElementById("timerClose");
-const timerTaskName = document.getElementById("timerTaskName");
-const timerDisplay = document.getElementById("timerDisplay");
-const timerStartBtn = document.getElementById("timerStart");
-const timerPauseBtn = document.getElementById("timerPause");
-const timerResetBtn = document.getElementById("timerReset");
+
 // Stats
 const statTotal = document.getElementById("stat-total");
 const statActive = document.getElementById("stat-active");
@@ -442,7 +435,7 @@ function createTaskEl(task) {
       ${task.notes ? `<p class="task-notes">${escapeHtml(task.notes)}</p>` : ""}
     </div>
     <div class="task-actions">
-      <button class="task-action-btn focus-btn" data-id="${task.id}" title="Focus Timer" aria-label="Start Timer">⏱️</button>
+
       <button class="task-action-btn edit" data-id="${task.id}" title="Edit task" aria-label="Edit task">✏️</button>
       <button class="task-action-btn del" data-id="${task.id}" title="Delete task" aria-label="Delete task">🗑️</button>
     </div>
@@ -451,10 +444,6 @@ function createTaskEl(task) {
   // Toggle complete
   li.querySelector(".task-check").addEventListener("change", () =>
     toggleTask(task.id),
-  );
-  // Focus Timer
-  li.querySelector(".focus-btn").addEventListener("click", () =>
-    openTimerModal(task),
   );
   // Edit
   li.querySelector(".edit").addEventListener("click", () =>
@@ -669,67 +658,7 @@ function saveEdit() {
   }
 }
 
-// ── Timer Logic ────────────────────────────────────────────
-let focusTimeSec = 25 * 60; // 25 mins
-let focusInterval = null;
 
-function updateTimerDisplay() {
-  const m = Math.floor(focusTimeSec / 60);
-  const s = focusTimeSec % 60;
-  timerDisplay.textContent = `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
-}
-
-function openTimerModal(task) {
-  timerTaskName.textContent = task.text;
-  focusTimeSec = 25 * 60;
-  updateTimerDisplay();
-  clearInterval(focusInterval);
-  timerStartBtn.style.display = "block";
-  timerPauseBtn.style.display = "none";
-  timerOverlay.classList.add("open");
-}
-
-function closeTimerModal() {
-  timerOverlay.classList.remove("open");
-  clearInterval(focusInterval);
-}
-
-timerStartBtn.addEventListener("click", () => {
-  timerStartBtn.style.display = "none";
-  timerPauseBtn.style.display = "block";
-  focusInterval = setInterval(() => {
-    focusTimeSec--;
-    updateTimerDisplay();
-    if (focusTimeSec <= 0) {
-      clearInterval(focusInterval);
-      timerStartBtn.style.display = "block";
-      timerPauseBtn.style.display = "none";
-      notifyDevice(
-        "🎉 Focus Session Complete!",
-        "Great job! Take a short break.",
-      );
-    }
-  }, 1000);
-});
-
-timerPauseBtn.addEventListener("click", () => {
-  clearInterval(focusInterval);
-  timerStartBtn.style.display = "block";
-  timerPauseBtn.style.display = "none";
-});
-
-timerResetBtn.addEventListener("click", () => {
-  clearInterval(focusInterval);
-  focusTimeSec = 25 * 60;
-  updateTimerDisplay();
-  timerStartBtn.style.display = "block";
-  timerPauseBtn.style.display = "none";
-});
-
-timerClose.addEventListener("click", closeTimerModal);
-timerOverlay.addEventListener("click", (e) => {
-  if (e.target === timerOverlay) closeTimerModal();
-});
 
 // ── Custom Confirm Dialog ──────────────────────────────────
 let confirmResolve = null;
