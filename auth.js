@@ -308,6 +308,8 @@ async function sendRealEmail(toEmail, toName, otpCode) {
     to_name: toName,
     passcode: otpCode,
     time: "10 minutes",
+    app_name: "TaskFlow",
+    from_name: "TaskFlow"
   };
 
   await emailjs.send(cfg.serviceId, cfg.templateId, templateParams);
